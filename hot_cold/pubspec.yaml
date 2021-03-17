@@ -29,7 +29,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   country_list_pick: ^1.0.0+3
-  country_code_picker: 1.7.0
+  country_code_picker: 2.0.1
+  flutter_screenutil: ^0.4.2
+
 
 
 dev_dependencies:
@@ -46,6 +48,15 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/OpenSans-Light.ttf
+          weight: 100
+        - asset: assets/fonts/OpenSans-SemiBold.ttf
+          weight: 600
 
   # To add assets to your application, add an assets section, like this:
   assets:
