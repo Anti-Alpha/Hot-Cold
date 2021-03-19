@@ -14,12 +14,31 @@ class Responsive {
   }
 }
 
+void _navigateToNextScreen(BuildContext context) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewScreen()));
+}
+
+
 class MyApp extends StatefulWidget {
   @override
   MyAppState createState() => new MyAppState();
 }
 
 class MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: MyHome()
+    );
+  }
+}
+
+class MyHome extends StatefulWidget {
+  @override
+  MyHomeState createState() => new MyHomeState();
+}
+
+class MyHomeState extends State<MyHome> {
   var countt = '';
   var season;
 
@@ -34,6 +53,7 @@ class MyAppState extends State<MyApp> {
     });
   }
 
+
   bool win = false, spr = false, sum = false, aut = false;
 
   // AnimationController _animationController;
@@ -41,7 +61,9 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
+
       title: '1',
       home: Scaffold(
         backgroundColor: Color(0xff1D2026),
@@ -69,21 +91,22 @@ class MyAppState extends State<MyApp> {
             Column(
               children: <Widget>[
                 Container(
-                  height: 200,
+                  height: 50,
                   width: 300,
                   // color: Colors.blue[600],
                 ),
                 Container(
-                  height: 50.0,
-                  width: 350.0,
+                  height: 60.0,
+                  width: 370.0,
                   decoration: BoxDecoration(
                     color: Color(0xff2C2F38),
                     borderRadius: BorderRadius.all(Radius.circular(15.0)),
                   ),
                   child: CountryCodePicker(
+
                     dialogBackgroundColor: Color(0xff1D2026),
                     barrierColor: Color(0xff1D2026),
-                    searchStyle: TextStyle(color: Color(0xffAEB0B3)),
+                    searchStyle: TextStyle(color: Color(0xFFE6E6E6)),
                     backgroundColor: Color(0xff1D2026),
                     padding: EdgeInsets.all(5.0),
                     onChanged: _handleCountryChanged,
@@ -92,8 +115,8 @@ class MyAppState extends State<MyApp> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     searchDecoration: InputDecoration(
-                      focusColor: Color(0xffAEB0B3),
-                      hoverColor: Color(0xffAEB0B3),
+                      focusColor: Color(0xFFE6E6E6),
+                      hoverColor: Color(0xFFE6E6E6),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xff1D2026)),
                       ),
@@ -102,13 +125,13 @@ class MyAppState extends State<MyApp> {
                       ),
                       prefixIcon: Icon(
                         Icons.search_sharp,
-                        color: Color(0xffAEB0B3),
+                        color: Color(0xFFE6E6E6),
                         size: 24.0,
                         semanticLabel:
-                            'Text to announce in accessibility modes',
+                        'Text to announce in accessibility modes',
                       ),
                       labelStyle: TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFFE6E6E6),
                         fontSize: 13,
                       ),
                       // enabledBorder: OutlineInputBorder(
@@ -151,15 +174,15 @@ class MyAppState extends State<MyApp> {
                           // style: TextStyle(fontFamily: 'OpenSans'),
                           color: new Color(0xFFE6E6E6)),
                     )
-                    // color: Colors.yellow[600],
-                    ),
+                  // color: Colors.yellow[600],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     AnimatedContainer(
-                        width: 80.0,
-                        height: 110.0,
+                        width: 75.0,
+                        height: 90.0,
                         duration: Duration(milliseconds: 300),
                         decoration: BoxDecoration(
                           color: win ? Color(0xff585D6A) : Color(0xff2D3039),
@@ -187,16 +210,18 @@ class MyAppState extends State<MyApp> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Container(
-                                  height: 10,
+                                  height: 5,
                                   width: 20,
                                 ),
-                                Image.asset(
-                                  'assets/images/dd.png',
-                                  width: 40.0,
-                                  height: 40.0,
+                                Container(
+                                  child: Image.asset(
+                                    'assets/images/dd.png',
+                                    width: 30.0,
+                                    height: 30.0,
+                                  ),
                                 ),
                                 Container(
-                                  height: 10,
+                                  height: 15,
                                   width: 20,
                                 ),
                                 Text(
@@ -204,14 +229,14 @@ class MyAppState extends State<MyApp> {
                                   style: TextStyle(
                                       fontFamily: 'OpenSans',
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 11,
+                                      fontSize: 10,
                                       color: Color(0xFFE6E6E6)),
                                 ),
                               ],
                             ))),
                     AnimatedContainer(
-                        width: 80.0,
-                        height: 110.0,
+                        width: 75.0,
+                        height: 90.0,
                         duration: Duration(milliseconds: 300),
                         decoration: BoxDecoration(
                           color: spr ? Color(0xff585D6A) : Color(0xff2D3039),
@@ -244,11 +269,11 @@ class MyAppState extends State<MyApp> {
                                 ),
                                 Image.asset(
                                   'assets/images/ff.png',
-                                  width: 40.0,
-                                  height: 40.0,
+                                  width: 30.0,
+                                  height: 30.0,
                                 ),
                                 Container(
-                                  height: 10,
+                                  height: 15,
                                   width: 20,
                                 ),
                                 Text(
@@ -256,14 +281,14 @@ class MyAppState extends State<MyApp> {
                                   style: TextStyle(
                                       fontFamily: 'OpenSans',
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 11,
+                                      fontSize: 10,
                                       color: Color(0xFFE6E6E6)),
                                 ),
                               ],
                             ))),
                     AnimatedContainer(
-                        width: 80.0,
-                        height: 110.0,
+                        width: 75.0,
+                        height: 90.0,
                         duration: Duration(milliseconds: 300),
                         decoration: BoxDecoration(
                           color: sum ? Color(0xff585D6A) : Color(0xff2D3039),
@@ -296,11 +321,11 @@ class MyAppState extends State<MyApp> {
                                 ),
                                 Image.asset(
                                   'assets/images/cc.png',
-                                  width: 40.0,
-                                  height: 40.0,
+                                  width: 30.0,
+                                  height: 30.0,
                                 ),
                                 Container(
-                                  height: 10,
+                                  height: 15,
                                   width: 20,
                                 ),
                                 Text(
@@ -308,14 +333,14 @@ class MyAppState extends State<MyApp> {
                                   style: TextStyle(
                                       fontFamily: 'OpenSans',
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 11,
+                                      fontSize: 10,
                                       color: Color(0xFFE6E6E6)),
                                 ),
                               ],
                             ))),
                     AnimatedContainer(
-                        width: 80.0,
-                        height: 110.0,
+                        width: 75.0,
+                        height: 90.0,
                         duration: Duration(milliseconds: 300),
                         decoration: BoxDecoration(
                           color: aut ? Color(0xff585D6A) : Color(0xff2D3039),
@@ -347,11 +372,11 @@ class MyAppState extends State<MyApp> {
                                 ),
                                 Image.asset(
                                   'assets/images/gg.png',
-                                  width: 40.0,
-                                  height: 40.0,
+                                  width: 30.0,
+                                  height: 30.0,
                                 ),
                                 Container(
-                                  height: 10,
+                                  height: 15,
                                   width: 20,
                                 ),
                                 Text(
@@ -359,16 +384,59 @@ class MyAppState extends State<MyApp> {
                                   style: TextStyle(
                                       fontFamily: 'OpenSans',
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 11,
+                                      fontSize: 10,
                                       color: Color(0xFFE6E6E6)),
                                 ),
                               ],
                             ))),
                   ],
-                )
+                ),
+                Container(
+                  height: 320,
+                  // color: Colors.blue,
+                ),
+                Container(
+                  height: 70,
+                  width: 390,
+                  margin: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Color(0xff2D3039),
+                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => NewScreen()));
+                    },
+                    child: Center (
+                      child: Text(
+                        'Continue',
+                        style: TextStyle(
+                            fontFamily: 'OpenSans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                            color: Color(0xFFE6E6E6)),
+                      ),),
+                  ),
+                ),
               ],
             ),
           ],
+        ),
+      ),
+    );
+
+  }
+}
+
+class NewScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('New Screen')),
+      body: Center(
+        child: Text(
+          'This is a new screen',
+          style: TextStyle(fontSize: 24.0),
         ),
       ),
     );
