@@ -304,6 +304,13 @@ void print_vector(vector <T> v){
     cout<<endl;
 }
 
+template <class T>
+void print_mas(T *mas, int length){
+    for(int i = 0; i < length; i++){
+        cout<<mas[i]<<" ";
+    }
+}
+
 void subtraction(vector<double> v1, vector <double> v2){
     for(int i = 0; i < v1.size(); i++){
         v2[i]-=v1[i];
@@ -314,17 +321,6 @@ void multiplication(vector<double> v1, double c){
     for(int i = 0; i < v1.size(); i++){
         v1[i]*=c;
     }
-}
-
-bool in(double *mas, double x, int length){
-    bool f = false;
-    for(int i = 0; i < length; i++){
-        if(mas[i] == x){
-            f = true;
-            break;
-        }
-    }
-    return f;
 }
 
 stringstream simplex(S_Table t){
@@ -370,7 +366,6 @@ stringstream simplex(S_Table t){
         out<<"coor "<<i<<": "<<"("<<t.coor[i][0]<<", "<<t.coor[i][1]<<")\n";
     }
 
-    bool result = false;
     int x = 1;
     out<<"\nInitial Cb:\n";
     for(int i = 0; i < t.height; i++){
@@ -378,7 +373,7 @@ stringstream simplex(S_Table t){
     }
 
 
-    int solutions; // 0 - no solutions, 1 - there is one solution, 2 - there are infinitely many solutions
+    int solutions = -1; // 0 - no solutions, 1 - there is one solution, 2 - there are infinitely many solutions
     while(true) {
         out<<"\n---------------------------Iteration #"<<x<<"---------------------------\n";
         t.delta0 = 0;
@@ -386,22 +381,7 @@ stringstream simplex(S_Table t){
 
         zh_gauss(t.a, t.b, t.height, t.width, t.coor, t.height);
 
-        //print system of equations
-        out << "System of equations: \n";
-        for (int i = 0; i < t.height; i++) {
-            for (int j = 0; j < t.width; j++) {
-                if (t.a[i][j] >= 0 && j != 0) {
-                    out << " + " << t.a[i][j] << "*X" << j + 1;
-                } else {
-                    out << t.a[i][j] << "*X" << j + 1;
-                }
-            }
-            out << " = ";
-            out << t.b[i] << endl;
-        }
-
         //Counting and printing deltas
-        out << "\nDeltas:\n";
         // *delta
         for (int i = 0; i < t.width; i++) {
             t.delta[i] = 0;
@@ -409,29 +389,10 @@ stringstream simplex(S_Table t){
                 t.delta[i] += t.a[j][i] * t.cb[j][1];
             }
             t.delta[i] -= t.z[i];
-            out << "delta" << i + 1 << ": " << t.delta[i] << endl;
         }
         // delta0
         for (int i = 0; i < t.height; i++) {
             t.delta0 += t.cb[i][1] * t.b[i];
-        }
-        out << "Delta0(Z-function at current moment): " << t.delta0 << "\n\n";
-        // checking for infinite solution or 1 solution
-        for(int i = 0; i < t.width; i++){
-            if(t.delta[i] < 0){
-                f = true;
-                break;
-            }
-            if(t.delta[i] == 0 && !in(t.cb[0], i, t.height)){
-                solutions = 2;
-                break;
-            }
-        }
-        if(solutions == 2) break;
-        if(!f){
-            solutions = 1;
-            out<<"Completed, no more steps needed\n";
-            break;
         }
         // Finding index of maximum element in deltas;
         double max = -10000;
@@ -443,7 +404,71 @@ stringstream simplex(S_Table t){
                 maxi = i;
             }
         }
-        out<<"Maximum of absolute values of delta is: " <<t.delta[maxi]<<" => the row of next basis is: "<<maxi<<"\n";
+
+        // Counting theta
+        for (int i = 0; i < t.height; i++) {
+            t.theta[i] = t.b[i] / t.a[i][maxi];
+        }
+        double min = 10000;
+        int mini; // The row to make basic row
+        // Finding the row fot the next basics
+        for (int i = 0; i < t.height; i++) {
+            if (t.theta[i] < min) {
+                min = t.theta[i];
+                mini = i;
+            }
+        }
+
+        // Changing coordinates of basis points
+        t.coor[mini][0] = mini;
+        t.coor[mini][1] = maxi;
+
+        // Printing Simplex-table
+        for(int i = 0; i < t.height; i++){
+            out<<"X"<<t.cb[i][0] + 1<<"|";
+            out<<t.cb[i][1]<<"|";
+            out<<t.b[i]<<"|";
+            for(int j = 0; j < t.width; j++){
+                out<<t.a[i][j]<<"|";
+            }
+            out<<t.theta[i]<<"\n";
+            out<<"------------------------------------------------------\n";
+        }
+        out<<"\t|"<<t.delta0<<"|";
+        for(int i = 0; i < t.width; i++){
+            out<<t.delta[i]<<"|";
+        }
+        out<<"\n";
+        for(int i = 0; i < t.height; i++){
+            out<<"X"<<t.cb[i][0] + 1<<" = "<<t.cb[i][1]<<endl;
+        }
+        // checking for infinite solution or 1 solution
+        for(int i = 0; i < t.width; i++){
+            if(t.delta[i] < 0){
+                f = true;
+                break;
+            }
+            if(t.delta[i] == 0){
+                bool presents = false;
+                for(int j = 0; j < t.height; j++){
+                    if(t.cb[j][0] == i) {
+                        presents = true;
+                        break;
+                    }
+                }
+                if(!presents)
+                {
+                    solutions = 2;
+                    break;
+                }
+            }
+        }
+        if(solutions == 2) break;
+        if(!f){
+            solutions = 1;
+            out<<"Completed, no more steps needed\n";
+            break;
+        }
         // Checking for infinity of Z -> incompatibility of system
         f = false;
         for(int i = 0; i < t.height; i++){
@@ -454,47 +479,10 @@ stringstream simplex(S_Table t){
         }
         if(!f){
             solutions = 0;
-            result = false;
             break;
         }
-
-        // counting and printing Thetas
-        out << "Thetas:\n";
-        for (int i = 0; i < t.height; i++) {
-            t.theta[i] = t.b[i] / t.a[i][maxi];
-            out << "theta" << i + 1 << ": " << t.theta[i] << "\n";
-        }
-
-        double min = 10000;
-        int mini; // The row to make basic row
-
-        // Finding the row fot the next basics
-        for (int i = 0; i < t.height; i++) {
-            if (t.theta[i] < min) {
-                min = t.theta[i];
-                mini = i;
-            }
-        }
-        out << "Minimum of thetas: " << min << " => the column of next basis is: "<<mini<<"\n\n";
-
-        out<<"Next basic variable is at position: ("<<mini<<", "<<maxi<<")";
-        out<<"\nAnd it is: "<<t.a[mini][maxi]<<endl;
-
-        // Changing coordinates of basis points and printing them out
-        t.coor[mini][0] = mini;
-        t.coor[mini][1] = maxi;
-        out<<"Coordinates of new basis points:\n";
-        for(int i = 0; i < t.height; i++){
-            out<<"coor "<<i<<": "<<"("<<t.coor[i][0]<<", "<<t.coor[i][1]<<")\n";
-        }
-
-        // Changing cb values and printing them out
         t.cb[mini][0] = maxi;
         t.cb[mini][1] = t.z[mini];
-        out<<"\nNew Cb:\n";
-        for(int i = 0; i < t.height; i++){
-            out<<"basis"<<t.cb[i][0]<<": "<<t.cb[i][1]<<endl;
-        }
         x++;
         if(x == 7) break;
     }
@@ -559,6 +547,10 @@ stringstream simplex(S_Table t){
             for(int i = 0; i < t.var_number; i++){
                 out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t.y[i]<<"\n";
             }
+            break;
+        default:
+            cout<<"SOME SHIT, MAN";
+            break;
 
     }
 
