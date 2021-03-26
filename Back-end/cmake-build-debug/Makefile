@@ -170,59 +170,32 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-simplex.o: simplex.cpp.o
+matrix.o: matrix.cpp.o
 
-.PHONY : simplex.o
-
-# target to build an object file
-simplex.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/simplex.cpp.o
-.PHONY : simplex.cpp.o
-
-simplex.i: simplex.cpp.i
-
-.PHONY : simplex.i
-
-# target to preprocess a source file
-simplex.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/simplex.cpp.i
-.PHONY : simplex.cpp.i
-
-simplex.s: simplex.cpp.s
-
-.PHONY : simplex.s
-
-# target to generate assembly for a file
-simplex.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/simplex.cpp.s
-.PHONY : simplex.cpp.s
-
-user_data.o: user_data.cpp.o
-
-.PHONY : user_data.o
+.PHONY : matrix.o
 
 # target to build an object file
-user_data.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/user_data.cpp.o
-.PHONY : user_data.cpp.o
+matrix.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cpp.o
+.PHONY : matrix.cpp.o
 
-user_data.i: user_data.cpp.i
+matrix.i: matrix.cpp.i
 
-.PHONY : user_data.i
+.PHONY : matrix.i
 
 # target to preprocess a source file
-user_data.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/user_data.cpp.i
-.PHONY : user_data.cpp.i
+matrix.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cpp.i
+.PHONY : matrix.cpp.i
 
-user_data.s: user_data.cpp.s
+matrix.s: matrix.cpp.s
 
-.PHONY : user_data.s
+.PHONY : matrix.s
 
 # target to generate assembly for a file
-user_data.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/user_data.cpp.s
-.PHONY : user_data.cpp.s
+matrix.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cpp.s
+.PHONY : matrix.cpp.s
 
 # Help Target
 help:
@@ -236,12 +209,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... simplex.o"
-	@echo "... simplex.i"
-	@echo "... simplex.s"
-	@echo "... user_data.o"
-	@echo "... user_data.i"
-	@echo "... user_data.s"
+	@echo "... matrix.o"
+	@echo "... matrix.i"
+	@echo "... matrix.s"
 .PHONY : help
 
 

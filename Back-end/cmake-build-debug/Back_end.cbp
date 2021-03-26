@@ -85,16 +85,10 @@
 		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/main.cpp">
 			<Option target="Back_end"/>
 		</Unit>
-		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/simplex.cpp">
+		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cpp">
 			<Option target="Back_end"/>
 		</Unit>
-		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/simplex.h">
-			<Option target="Back_end"/>
-		</Unit>
-		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/user_data.cpp">
-			<Option target="Back_end"/>
-		</Unit>
-		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/user_data.h">
+		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.h">
 			<Option target="Back_end"/>
 		</Unit>
 		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/CMakeLists.txt">

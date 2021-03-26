@@ -7,7 +7,5 @@ include_directories(.)
 
 add_executable(Back_end
         main.cpp
-        simplex.cpp
-        simplex.h
-        user_data.cpp
-        user_data.h)
+        matrix.h
+        matrix.cpp matrix.cpp)

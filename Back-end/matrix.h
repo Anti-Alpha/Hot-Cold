@@ -3,13 +3,9 @@
 //
 
 #include <vector>
-#include <algorithm>
-#include <set>
 #include <sstream>
 #include <fstream>
-#include <math.h>
 #include <iostream>
-
 
 using namespace std;
 
@@ -28,6 +24,8 @@ struct S_Table{
     double delta0; // delta0
     double *theta; // Theta meanings;
     int **coor; //coordinates of basis variables in system
+    double *y;
+    double nu; //price of game
     string way; // Does it tend to max or minimum
     int width; // width of system
     int height; // height of system
@@ -58,5 +56,7 @@ void multiplication(vector<double> v1, double c);
 void zh_gauss(double **a, double *b, int n, int m, int **coor, int length);
 
 S_Table getdata(ifstream &in);
+
+stringstream simplex(S_Table t);
 
 #endif //BACK_END_MATRIX_H
