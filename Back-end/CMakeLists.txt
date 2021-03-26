@@ -8,4 +8,5 @@ include_directories(.)
 add_executable(Back_end
         main.cpp
         matrix.h
-        matrix.cpp matrix.cpp)
+        matrix.cpp matrix.cpp
+        file.txt)

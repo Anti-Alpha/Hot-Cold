@@ -374,6 +374,7 @@ stringstream simplex(S_Table t){
 
 
     int solutions = -1; // 0 - no solutions, 1 - there is one solution, 2 - there are infinitely many solutions
+    // Iterations
     while(true) {
         out<<"\n---------------------------Iteration #"<<x<<"---------------------------\n";
         t.delta0 = 0;
