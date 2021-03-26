@@ -316,6 +316,17 @@ void multiplication(vector<double> v1, double c){
     }
 }
 
+bool in(double *mas, double x, int length){
+    bool f = false;
+    for(int i = 0; i < length; i++){
+        if(mas[i] == x){
+            f = true;
+            break;
+        }
+    }
+    return f;
+}
+
 stringstream simplex(S_Table t){
     stringstream out;
 
@@ -366,6 +377,8 @@ stringstream simplex(S_Table t){
         out<<"basis"<<t.cb[i][0]<<": "<<t.cb[i][1]<<endl;
     }
 
+
+    int solutions; // 0 - no solutions, 1 - there is one solution, 2 - there are infinitely many solutions
     while(true) {
         out<<"\n---------------------------Iteration #"<<x<<"---------------------------\n";
         t.delta0 = 0;
@@ -388,8 +401,8 @@ stringstream simplex(S_Table t){
         }
 
         //Counting and printing deltas
-        out << "Deltas:\n";
-
+        out << "\nDeltas:\n";
+        // *delta
         for (int i = 0; i < t.width; i++) {
             t.delta[i] = 0;
             for (int j = 0; j < t.height; j++) {
@@ -398,38 +411,39 @@ stringstream simplex(S_Table t){
             t.delta[i] -= t.z[i];
             out << "delta" << i + 1 << ": " << t.delta[i] << endl;
         }
-
+        // delta0
         for (int i = 0; i < t.height; i++) {
             t.delta0 += t.cb[i][1] * t.b[i];
         }
-
-        out << "\nDelta0(Z-function at current moment): " << t.delta0 << endl;
-
+        out << "Delta0(Z-function at current moment): " << t.delta0 << "\n\n";
+        // checking for infinite solution or 1 solution
         for(int i = 0; i < t.width; i++){
             if(t.delta[i] < 0){
                 f = true;
                 break;
             }
+            if(t.delta[i] == 0 && !in(t.cb[0], i, t.height)){
+                solutions = 2;
+                break;
+            }
         }
+        if(solutions == 2) break;
         if(!f){
-            result = true;
+            solutions = 1;
             out<<"Completed, no more steps needed\n";
             break;
         }
-
         // Finding index of maximum element in deltas;
-
         double max = -10000;
         int maxi = 0; // The column to make basic column
-
         // Finding the column for the next basic
         for (int i = 0; i < t.width; i++) {
-            if (abs(t.delta[i]) >= max) {
+            if (t.delta[i] < 0 && abs(t.delta[i]) >= max) {
                 max = abs(t.delta[i]);
                 maxi = i;
             }
         }
-
+        out<<"Maximum of absolute values of delta is: " <<t.delta[maxi]<<" => the row of next basis is: "<<maxi<<"\n";
         // Checking for infinity of Z -> incompatibility of system
         f = false;
         for(int i = 0; i < t.height; i++){
@@ -439,6 +453,7 @@ stringstream simplex(S_Table t){
             }
         }
         if(!f){
+            solutions = 0;
             result = false;
             break;
         }
@@ -460,7 +475,7 @@ stringstream simplex(S_Table t){
                 mini = i;
             }
         }
-        out << "minimum of thetas: " << min << " => ";
+        out << "Minimum of thetas: " << min << " => the column of next basis is: "<<mini<<"\n\n";
 
         out<<"Next basic variable is at position: ("<<mini<<", "<<maxi<<")";
         out<<"\nAnd it is: "<<t.a[mini][maxi]<<endl;
@@ -476,7 +491,7 @@ stringstream simplex(S_Table t){
         // Changing cb values and printing them out
         t.cb[mini][0] = maxi;
         t.cb[mini][1] = t.z[mini];
-        out<<"New Cb:\n";
+        out<<"\nNew Cb:\n";
         for(int i = 0; i < t.height; i++){
             out<<"basis"<<t.cb[i][0]<<": "<<t.cb[i][1]<<endl;
         }
@@ -484,36 +499,67 @@ stringstream simplex(S_Table t){
         if(x == 7) break;
     }
 
-    if(result) {
-        out << "\n\n\n---------------------------Task Solved---------------------------\n";
-        out << "Zmax = " << t.delta0 << endl;
-        out << "Y = (";
-        for (int i = 0; i < t.width; i++) {
-            bool exists = false;
-            int r;
-            for (int j = 0; j < t.height; j++) {
-                if (t.cb[j][0] == i) {
-                    r = j;
-                    exists = true;
-                    break;
+    switch (solutions) {
+        case 1:
+            out << "\n\n\n---------------------------Task Solved---------------------------\n";
+            out << "Zmax = " << t.delta0 << endl;
+            out << "Y = (";
+            for (int i = 0; i < t.width; i++) {
+                bool exists = false;
+                int r;
+                for (int j = 0; j < t.height; j++) {
+                    if (t.cb[j][0] == i) {
+                        r = j;
+                        exists = true;
+                        break;
+                    }
                 }
+                t.y[i] = ((exists == true) ? t.b[r] : 0);
+                out << t.y[i] << (i == t.width - 1 ? ")\n" : ", ");
             }
-            t.y[i] = ((exists == true) ? t.b[r] : 0);
-            out << t.y[i] << (i == t.width - 1 ? ")\n" : ", ");
-        }
-        t.nu = 1/t.delta0;
-        out << "Nu: " << t.nu << " - the price of game\n";
-        out<<"Y*Nu = "<<"(";
-        for(int i = 0; i < t.var_number; i++){
-            t.y[i]*=t.nu;
-            out<<t.y[i]<<((i == t.var_number - 1) ? ")\n": ", ");
-        }
-        out<<"\n\n\n---------------------------Results---------------------------\n";
-        for(int i = 0; i < t.var_number; i++){
-            out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t.y[i]<<"\n";
-        }
-    }else{
-        out<<"NO SOLUTIONS\n";
+            t.nu = 1/t.delta0;
+            out << "Nu: " << t.nu << " - the price of game\n";
+            out<<"Y*Nu = "<<"(";
+            for(int i = 0; i < t.var_number; i++){
+                t.y[i]*=t.nu;
+                out<<t.y[i]<<((i == t.var_number - 1) ? ")\n": ", ");
+            }
+            out<<"\n\n\n---------------------------Results---------------------------\n";
+            for(int i = 0; i < t.var_number; i++){
+                out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t.y[i]<<"\n";
+            }
+            break;
+        case 0:
+            out<<"NO SOLUTIONS\n";
+            break;
+        case 2:
+            out<<"Infinitely many solutions\nZmax = " << t.delta0 <<"\nFor example:\n";
+            out << "Y = (";
+            for (int i = 0; i < t.width; i++) {
+                bool exists = false;
+                int r;
+                for (int j = 0; j < t.height; j++) {
+                    if (t.cb[j][0] == i) {
+                        r = j;
+                        exists = true;
+                        break;
+                    }
+                }
+                t.y[i] = ((exists == true) ? t.b[r] : 0);
+                out << t.y[i] << (i == t.width - 1 ? ")\n" : ", ");
+            }
+            t.nu = 1/t.delta0;
+            out << "Nu: " << t.nu << " - the price of game\n";
+            out<<"Y*Nu = "<<"(";
+            for(int i = 0; i < t.var_number; i++){
+                t.y[i]*=t.nu;
+                out<<t.y[i]<<((i == t.var_number - 1) ? ")\n": ", ");
+            }
+            out<<"\n\n\n---------------------------Results---------------------------\n";
+            for(int i = 0; i < t.var_number; i++){
+                out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t.y[i]<<"\n";
+            }
+
     }
 
     return out;
