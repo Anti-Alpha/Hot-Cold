@@ -30,6 +30,7 @@ struct S_Table{
     int width; // width of system
     int height; // height of system
     int minimax;
+    stringstream out;
 };
 
 vector <pair <int, int> > Saddle_point(vector < vector<double> > v);
@@ -57,6 +58,8 @@ void zh_gauss(double **a, double *b, int n, int m, int **coor, int length);
 
 S_Table getdata(ifstream &in);
 
-stringstream simplex(S_Table t);
+void simplex(S_Table *t);
+
+vector <vector<double>> AtoV(double **a, int n, int m);
 
 #endif //BACK_END_MATRIX_H

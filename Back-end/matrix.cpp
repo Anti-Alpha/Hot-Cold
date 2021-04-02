@@ -10,6 +10,7 @@ using namespace std;
 
 S_Table getdata(ifstream &in){
     S_Table t;
+    t.out.str(string());
     in >> t.lim_number;
     in >> t.var_number;
     t.width = t.lim_number + t.var_number;
@@ -34,20 +35,13 @@ S_Table getdata(ifstream &in){
         }
 
         string sn;
-        t.sign[i] = -2;
-        while(t.sign[i] != -1 && t.sign[i] != 0 && t.sign[i] != 1) {
-            in>>sn;
-            if (sn.compare("<=") == 0) t.sign[i] = -1;
-            else if (sn.compare("=") == 0) t.sign[i] = 0;
-            else if (sn.compare(">=") == 0) t.sign[i] = 1;
-            else cout<<"Wrong input. try another one\n";
-        }
-        in>>t.b[i];
+        t.sign[i] = -1;
+        t.b[i] = 1;
     }
 
     // Scan Z-function
     for(int i = 0; i < t.var_number; i++){
-        in>>t.z[i];
+        t.z[i] = 1;
     }
 
     // Initial left of function with zeroes
@@ -56,14 +50,8 @@ S_Table getdata(ifstream &in){
     }
 
     // Initial tendency of Z-function
-    in>>t.way;
-    if(t.way == "max")
-        t.minimax = 1;
-    else if(t.way == "min")
-        t.minimax = 0;
-    else {
-        cout << "Wrong input: "<<t.way;
-    }
+    t.way = "max";
+    t.minimax = 1;
 
     // Coordinates of basis points in A-matrix
     for(int i = 0; i < t.height; i++){
@@ -127,7 +115,7 @@ vector < vector <double> > removal(vector < vector<double> > v){
     }
     vector < vector<double> > temp;
     for(int i = 0; i < v.size(); i++){
-        set<int>::iterator it = rtbd.find(i);
+        auto it = rtbd.find(i);
         if(*it == *(rtbd.end())) {
             temp.push_back(v[i]);
         }
@@ -183,9 +171,9 @@ vector <int> Savage_criterion(vector < vector<double> > v){
 
     vector <int> result;
     double min = 1000;
-    for(int i = 0; i < t.size(); i++)
-        if(t[i] < min)
-            min = t[i];
+    for(double i : t)
+        if(i < min)
+            min = i;
     for(int i = 0; i < t.size(); i++)
         if(t[i] == min){
             result.push_back(i+1);
@@ -210,9 +198,9 @@ vector <int> Hurwitz_criterion(vector < vector<double> > v, double k){
         max = -1000;
     }
     vector <int> result;
-    for(int i = 0; i < h.size(); i++)
-        if(h[i] > max)
-            max = h[i];
+    for(double i : h)
+        if(i > max)
+            max = i;
     for(int i = 0; i < h.size(); i++)
         if(h[i] == max){
             result.push_back(i+1);
@@ -269,6 +257,19 @@ vector <pair <int, int> > Saddle_point(vector < vector<double> > v){
 
 }
 
+vector <vector<double>> AtoV(double **a, int n, int m){
+    vector <vector<double>> v;
+    vector <double> temp;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            temp.push_back(a[i][j]);
+        }
+        v.push_back(temp);
+        temp.clear();
+    }
+    return v;
+}
+
 vector<int> Wald_criterion(vector < vector<double> > v){
     vector <double> min_rows;
     vector <int> result_rows;
@@ -284,9 +285,9 @@ vector<int> Wald_criterion(vector < vector<double> > v){
         min = 1000;
     }
     double max = -1000;
-    for(int i = 0; i < min_rows.size(); i++)
-        if(min_rows[i] > max)
-            max = min_rows[i];
+    for(double min_row : min_rows)
+        if(min_row > max)
+            max = min_row;
     for(int i = 0; i < min_rows.size(); i++)
         if(min_rows[i] == max)
             result_rows.push_back(i+1);
@@ -318,24 +319,24 @@ void subtraction(vector<double> v1, vector <double> v2){
 }
 
 void multiplication(vector<double> v1, double c){
-    for(int i = 0; i < v1.size(); i++){
-        v1[i]*=c;
+    for(double & i : v1){
+        i*=c;
     }
 }
 
-stringstream simplex(S_Table t){
+void simplex(S_Table *t){
     stringstream out;
 
     out<<"Initial system: \n";
-    for(int i = 0; i < t.height; i++){
-        for(int j = 0; j < t.var_number; j++){
-            if(t.a[i][j] >= 0 && j != 0){
-                out << " + "<<t.a[i][j]<<"*X"<< j+1;
+    for(int i = 0; i < t->height; i++){
+        for(int j = 0; j < t->var_number; j++){
+            if(t->a[i][j] >= 0 && j != 0){
+                out << " + "<<t->a[i][j]<<"*X"<< j+1;
             }else{
-                out << t.a[i][j]<< "*X"<<j+1;
+                out << t->a[i][j]<< "*X"<<j+1;
             }
         }
-        switch(t.sign[i]){
+        switch(t->sign[i]){
             case -1:
                 out << " <= ";
                 break;
@@ -348,28 +349,28 @@ stringstream simplex(S_Table t){
             default:
                 break;
         }
-        out << t.b[i] << endl;
+        out << t->b[i] << endl;
     }
 
     // print Z-function
     out << "Z-function: ";
-    for (int i = 0; i < t.width; i++) {
-        if (t.z[i] >= 0 && i != 0)
-            out << "+ " << t.z[i] << "*X" << i + 1 << " ";
+    for (int i = 0; i < t->width; i++) {
+        if (t->z[i] >= 0 && i != 0)
+            out << "+ " << t->z[i] << "*X" << i + 1 << " ";
         else
-            out << t.z[i] << "*X" << i + 1 << " ";
+            out << t->z[i] << "*X" << i + 1 << " ";
     }
-    out << "-> " << t.way << "\n\n";
+    out << "-> " << t->way << "\n\n";
 
     out<<"Coordinates of initial basis points:\n";
-    for(int i = 0; i < t.height; i++){
-        out<<"coor "<<i<<": "<<"("<<t.coor[i][0]<<", "<<t.coor[i][1]<<")\n";
+    for(int i = 0; i < t->height; i++){
+        out<<"coor "<<i<<": "<<"("<<t->coor[i][0]<<", "<<t->coor[i][1]<<")\n";
     }
 
     int x = 1;
     out<<"\nInitial Cb:\n";
-    for(int i = 0; i < t.height; i++){
-        out<<"basis"<<t.cb[i][0]<<": "<<t.cb[i][1]<<endl;
+    for(int i = 0; i < t->height; i++){
+        out<<"basis"<<t->cb[i][0]<<": "<<t->cb[i][1]<<endl;
     }
 
 
@@ -377,82 +378,82 @@ stringstream simplex(S_Table t){
     // Iterations
     while(true) {
         out<<"\n---------------------------Iteration #"<<x<<"---------------------------\n";
-        t.delta0 = 0;
+        t->delta0 = 0;
         bool f = false;
 
-        zh_gauss(t.a, t.b, t.height, t.width, t.coor, t.height);
+        zh_gauss(t->a, t->b, t->height, t->width, t->coor, t->height);
 
         //Counting and printing deltas
         // *delta
-        for (int i = 0; i < t.width; i++) {
-            t.delta[i] = 0;
-            for (int j = 0; j < t.height; j++) {
-                t.delta[i] += t.a[j][i] * t.cb[j][1];
+        for (int i = 0; i < t->width; i++) {
+            t->delta[i] = 0;
+            for (int j = 0; j < t->height; j++) {
+                t->delta[i] += t->a[j][i] * t->cb[j][1];
             }
-            t.delta[i] -= t.z[i];
+            t->delta[i] -= t->z[i];
         }
         // delta0
-        for (int i = 0; i < t.height; i++) {
-            t.delta0 += t.cb[i][1] * t.b[i];
+        for (int i = 0; i < t->height; i++) {
+            t->delta0 += t->cb[i][1] * t->b[i];
         }
         // Finding index of maximum element in deltas;
         double max = -10000;
         int maxi = 0; // The column to make basic column
         // Finding the column for the next basic
-        for (int i = 0; i < t.width; i++) {
-            if (t.delta[i] < 0 && abs(t.delta[i]) >= max) {
-                max = abs(t.delta[i]);
+        for (int i = 0; i < t->width; i++) {
+            if (t->delta[i] < 0 && abs(t->delta[i]) >= max) {
+                max = abs(t->delta[i]);
                 maxi = i;
             }
         }
 
         // Counting theta
-        for (int i = 0; i < t.height; i++) {
-            t.theta[i] = t.b[i] / t.a[i][maxi];
+        for (int i = 0; i < t->height; i++) {
+            t->theta[i] = t->b[i] / t->a[i][maxi];
         }
         double min = 10000;
         int mini; // The row to make basic row
         // Finding the row fot the next basics
-        for (int i = 0; i < t.height; i++) {
-            if (t.theta[i] < min) {
-                min = t.theta[i];
+        for (int i = 0; i < t->height; i++) {
+            if (t->theta[i] < min) {
+                min = t->theta[i];
                 mini = i;
             }
         }
 
         // Changing coordinates of basis points
-        t.coor[mini][0] = mini;
-        t.coor[mini][1] = maxi;
+        t->coor[mini][0] = mini;
+        t->coor[mini][1] = maxi;
 
         // Printing Simplex-table
-        for(int i = 0; i < t.height; i++){
-            out<<"X"<<t.cb[i][0] + 1<<"|";
-            out<<t.cb[i][1]<<"|";
-            out<<t.b[i]<<"|";
-            for(int j = 0; j < t.width; j++){
-                out<<t.a[i][j]<<"|";
+        for(int i = 0; i < t->height; i++){
+            out<<"X"<<t->cb[i][0] + 1<<"|";
+            out<<t->cb[i][1]<<"|";
+            out<<t->b[i]<<"|";
+            for(int j = 0; j < t->width; j++){
+                out<<t->a[i][j]<<"|";
             }
-            out<<t.theta[i]<<"\n";
+            out<<t->theta[i]<<"|\n";
             out<<"------------------------------------------------------\n";
         }
-        out<<"\t|"<<t.delta0<<"|";
-        for(int i = 0; i < t.width; i++){
-            out<<t.delta[i]<<"|";
+        out<<"\t|"<<t->delta0<<"|";
+        for(int i = 0; i < t->width; i++){
+            out<<t->delta[i]<<"|";
         }
         out<<"\n";
-        for(int i = 0; i < t.height; i++){
-            out<<"X"<<t.cb[i][0] + 1<<" = "<<t.cb[i][1]<<endl;
+        for(int i = 0; i < t->height; i++){
+            out<<"X"<<t->cb[i][0] + 1<<" = "<<t->cb[i][1]<<endl;
         }
         // checking for infinite solution or 1 solution
-        for(int i = 0; i < t.width; i++){
-            if(t.delta[i] < 0){
+        for(int i = 0; i < t->width; i++){
+            if(t->delta[i] < 0){
                 f = true;
                 break;
             }
-            if(t.delta[i] == 0){
+            if(t->delta[i] == 0){
                 bool presents = false;
-                for(int j = 0; j < t.height; j++){
-                    if(t.cb[j][0] == i) {
+                for(int j = 0; j < t->height; j++){
+                    if(t->cb[j][0] == i) {
                         presents = true;
                         break;
                     }
@@ -472,8 +473,8 @@ stringstream simplex(S_Table t){
         }
         // Checking for infinity of Z -> incompatibility of system
         f = false;
-        for(int i = 0; i < t.height; i++){
-            if(t.a[i][maxi] > 0){
+        for(int i = 0; i < t->height; i++){
+            if(t->a[i][maxi] > 0){
                 f = true;
                 break;
             }
@@ -482,78 +483,78 @@ stringstream simplex(S_Table t){
             solutions = 0;
             break;
         }
-        t.cb[mini][0] = maxi;
-        t.cb[mini][1] = t.z[mini];
+        t->cb[mini][0] = maxi;
+        t->cb[mini][1] = t->z[mini];
         x++;
-        if(x == 7) break;
+        if(x == 1000) break;
     }
 
     switch (solutions) {
         case 1:
             out << "\n\n\n---------------------------Task Solved---------------------------\n";
-            out << "Zmax = " << t.delta0 << endl;
+            out << "Zmax = " << t->delta0 << endl;
             out << "Y = (";
-            for (int i = 0; i < t.width; i++) {
+            for (int i = 0; i < t->width; i++) {
                 bool exists = false;
                 int r;
-                for (int j = 0; j < t.height; j++) {
-                    if (t.cb[j][0] == i) {
+                for (int j = 0; j < t->height; j++) {
+                    if (t->cb[j][0] == i) {
                         r = j;
                         exists = true;
                         break;
                     }
                 }
-                t.y[i] = ((exists == true) ? t.b[r] : 0);
-                out << t.y[i] << (i == t.width - 1 ? ")\n" : ", ");
+                t->y[i] = (exists ? t->b[r] : 0);
+                out << t->y[i] << (i == t->width - 1 ? ")\n" : ", ");
             }
-            t.nu = 1/t.delta0;
-            out << "Nu: " << t.nu << " - the price of game\n";
+            t->nu = 1/t->delta0;
+            out << "Nu: " << t->nu << " - the price of game\n";
             out<<"Y*Nu = "<<"(";
-            for(int i = 0; i < t.var_number; i++){
-                t.y[i]*=t.nu;
-                out<<t.y[i]<<((i == t.var_number - 1) ? ")\n": ", ");
+            for(int i = 0; i < t->var_number; i++){
+                t->y[i]*=t->nu;
+                out<<t->y[i]<<((i == t->var_number - 1) ? ")\n": ", ");
             }
             out<<"\n\n\n---------------------------Results---------------------------\n";
-            for(int i = 0; i < t.var_number; i++){
-                out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t.y[i]<<"\n";
+            for(int i = 0; i < t->var_number; i++){
+                out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t->y[i]<<"\n";
             }
             break;
         case 0:
             out<<"NO SOLUTIONS\n";
             break;
         case 2:
-            out<<"Infinitely many solutions\nZmax = " << t.delta0 <<"\nFor example:\n";
+            out<<"Infinitely many solutions\nZmax = " << t->delta0 <<"\nFor example:\n";
             out << "Y = (";
-            for (int i = 0; i < t.width; i++) {
+            for (int i = 0; i < t->width; i++) {
                 bool exists = false;
                 int r;
-                for (int j = 0; j < t.height; j++) {
-                    if (t.cb[j][0] == i) {
+                for (int j = 0; j < t->height; j++) {
+                    if (t->cb[j][0] == i) {
                         r = j;
                         exists = true;
                         break;
                     }
                 }
-                t.y[i] = ((exists == true) ? t.b[r] : 0);
-                out << t.y[i] << (i == t.width - 1 ? ")\n" : ", ");
+                t->y[i] = (exists ? t->b[r] : 0);
+                out << t->y[i] << (i == t->width - 1 ? ")\n" : ", ");
             }
-            t.nu = 1/t.delta0;
-            out << "Nu: " << t.nu << " - the price of game\n";
+            t->nu = 1/t->delta0;
+            out << "Nu: " << t->nu << " - the price of game\n";
             out<<"Y*Nu = "<<"(";
-            for(int i = 0; i < t.var_number; i++){
-                t.y[i]*=t.nu;
-                out<<t.y[i]<<((i == t.var_number - 1) ? ")\n": ", ");
+            for(int i = 0; i < t->var_number; i++){
+                t->y[i]*=t->nu;
+                out<<t->y[i]<<((i == t->var_number - 1) ? ")\n": ", ");
             }
             out<<"\n\n\n---------------------------Results---------------------------\n";
-            for(int i = 0; i < t.var_number; i++){
-                out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t.y[i]<<"\n";
+            for(int i = 0; i < t->var_number; i++){
+                out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t->y[i]<<"\n";
             }
             break;
         default:
-            cout<<"SOME SHIT, MAN";
+            out<<"SOME SHIT, MAN";
             break;
 
     }
 
-    return out;
+    t->out<<out.str();
 }
