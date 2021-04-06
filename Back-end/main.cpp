@@ -5,7 +5,7 @@ using namespace std;
 int main(){
 
 //    ifstream in("/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/data.txt");
-    ifstream csv("/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/Data_Final_Table.txt");
+    ifstream csv("/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/data.txt");
     S_Table t = getdata(csv);
 
     csv.close();

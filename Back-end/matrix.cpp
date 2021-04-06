@@ -33,10 +33,8 @@ S_Table getdata(ifstream &in){
             else
                 (j == t.var_number + i) ? t.a[i][j] = 1 : t.a[i][j] = 0;
         }
-
-        string sn;
         t.sign[i] = -1;
-        t.b[i] = 1;
+        t.b[i] = 1.0;
     }
 
     // Scan Z-function
@@ -84,23 +82,25 @@ void zh_gauss(double **a, double *b, int n, int m, int **coor, int length){
         int row = coor[k][0];
         int column = coor[k][1];
         double base = a[row][column];
-//        cout<<base<<" "<<row<<" "<<column<<endl;
+        cout<<base<<" "<<row<<" "<<column<<endl;
         for(int i = 0; i < m; i++){
             a[row][i]/=base;
         }
         b[row]/=base;
         for(int i = 0; i < n; i++){
             double div = a[i][column];
-//            cout<<div<<endl;
+            cout<<div<<endl;
             for(int j = 0; j < m; j++) {
                 if (i != row){
-//                    cout<<"a["<<i<<"]["<<j<<"] = "<<a[i][j]<<" - "<<a[row][j]<<" * "<<div<<" = "<<a[i][j] - a[row][j]*div<<endl;
+                    cout<<"a["<<i<<"]["<<j<<"] = "<<a[i][j]<<" - "<<a[row][j]<<" * "<<div<<" = "<<a[i][j] - a[row][j]*div<<endl;
                     a[i][j] -= a[row][j] * div;
                 }else
                     break;
             }
-            if(i != row)
-                b[i]-=b[row]*div;
+            if(i != row) {
+                cout<<"b["<<i<<"] = "<<b[i]<<" - "<<b[row]<<"*"<<div<<" = "<<b[i] - b[row]*div<<endl;
+                b[i] -= b[row] * div;
+            }
         }
     }
 }
