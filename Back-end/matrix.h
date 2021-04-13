@@ -31,6 +31,7 @@ struct S_Table{
     int height; // height of system
     int minimax;
     stringstream out;
+    string season;
 };
 
 vector <pair <int, int> > Saddle_point(vector < vector<double> > v);
@@ -61,5 +62,7 @@ S_Table getdata(ifstream &in);
 void simplex(S_Table *t);
 
 vector <vector<double>> AtoV(double **a, int n, int m);
+
+void matrixGameSolver();
 
 #endif //BACK_END_MATRIX_H

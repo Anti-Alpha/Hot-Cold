@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <set>
 #include <math.h>
-#include <iomanip>
+#include <cctype>
 
 using namespace std;
 
@@ -28,9 +28,9 @@ S_Table getdata(ifstream &in){
     for(int i = 0; i < t.height; i++){
         t.a[i] = new double[t.width];
         for(int j = 0; j < t.width; j++){
-            if(j < t.var_number)
-                in>>t.a[i][j];
-            else
+            if(j < t.var_number) {
+                in >> t.a[i][j];
+            }else
                 (j == t.var_number + i) ? t.a[i][j] = 1 : t.a[i][j] = 0;
         }
         t.sign[i] = -1;
@@ -82,23 +82,23 @@ void zh_gauss(double **a, double *b, int n, int m, int **coor, int length){
         int row = coor[k][0];
         int column = coor[k][1];
         double base = a[row][column];
-        cout<<base<<" "<<row<<" "<<column<<endl;
+//        cout<<base<<" "<<row<<" "<<column<<endl;
         for(int i = 0; i < m; i++){
             a[row][i]/=base;
         }
         b[row]/=base;
         for(int i = 0; i < n; i++){
             double div = a[i][column];
-            cout<<div<<endl;
+//            cout<<div<<endl;
             for(int j = 0; j < m; j++) {
                 if (i != row){
-                    cout<<"a["<<i<<"]["<<j<<"] = "<<a[i][j]<<" - "<<a[row][j]<<" * "<<div<<" = "<<a[i][j] - a[row][j]*div<<endl;
+//                    cout<<"a["<<i<<"]["<<j<<"] = "<<a[i][j]<<" - "<<a[row][j]<<" * "<<div<<" = "<<a[i][j] - a[row][j]*div<<endl;
                     a[i][j] -= a[row][j] * div;
                 }else
                     break;
             }
             if(i != row) {
-                cout<<"b["<<i<<"] = "<<b[i]<<" - "<<b[row]<<"*"<<div<<" = "<<b[i] - b[row]*div<<endl;
+//                cout<<"b["<<i<<"] = "<<b[i]<<" - "<<b[row]<<"*"<<div<<" = "<<b[i] - b[row]*div<<endl;
                 b[i] -= b[row] * div;
             }
         }
@@ -212,8 +212,8 @@ vector <pair <int, int> > Saddle_point(vector < vector<double> > v){
     vector <double> min_rows;
     vector <double> max_columns;
     pair <int, int> point;
-    double min = 1000;
-    double max = -1000;
+    double min = 100000000;
+    double max = -100000000;
     int rows = v.size();
     int columns = v[0].size();
     // min in rows
@@ -222,7 +222,7 @@ vector <pair <int, int> > Saddle_point(vector < vector<double> > v){
             if(v[i][j] < min)
                 min = v[i][j];
         min_rows.push_back(min);
-        min = 1000;
+        min = 100000000;
     }
     //max in columns
     for(int i = 0; i < columns; i++){
@@ -230,7 +230,7 @@ vector <pair <int, int> > Saddle_point(vector < vector<double> > v){
             if(v[j][i] > max) max = v[j][i];
         }
         max_columns.push_back(max);
-        max = -1000;
+        max = -100000000;
     }
 
     sort(min_rows.begin(), min_rows.end());
@@ -444,6 +444,7 @@ void simplex(S_Table *t){
         for(int i = 0; i < t->height; i++){
             out<<"X"<<t->cb[i][0] + 1<<" = "<<t->cb[i][1]<<endl;
         }
+
         // checking for infinite solution or 1 solution
         for(int i = 0; i < t->width; i++){
             if(t->delta[i] < 0){
@@ -458,8 +459,7 @@ void simplex(S_Table *t){
                         break;
                     }
                 }
-                if(!presents)
-                {
+                if(!presents){
                     solutions = 2;
                     break;
                 }
@@ -557,4 +557,29 @@ void simplex(S_Table *t){
     }
 
     t->out<<out.str();
+}
+
+void matrixGameSolver(){
+    string season;
+    ifstream in("../data.txt");
+    in>>season;
+    in.close();
+    for(int i = 0; i < season.length(); i++){
+        tolower(season[i]);
+    }
+    toupper(season[0]);
+    string file_path = "../Seasons/"+season+".txt";
+    ifstream maIN(file_path);
+    S_Table t = getdata(maIN);
+    maIN.close();
+    stringstream out;
+    vector<pair<int, int>> points = Saddle_point(AtoV(t.a, t.lim_number, t.var_number));
+    if(points[0].first != -1){
+        out<<"There exists a solution at strategy #"<<points[0].first;
+    }else{
+        simplex(&t);
+        out<<"No Saddle Point!\nSolving with Simplex Method:\n\n"<<t.out.str();
+    }
+    ofstream output("../output.txt");
+    output<<out.str();
 }

@@ -10,4 +10,4 @@ add_executable(Back_end
         matrix.h
         matrix.cpp matrix.cpp
         Data_Final_Table.txt
-        Winter.txt)
+        Seasons/Winter.txt)
