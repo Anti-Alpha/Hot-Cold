@@ -575,7 +575,17 @@ void matrixGameSolver(){
     stringstream out;
     vector<pair<int, int>> points = Saddle_point(AtoV(t.a, t.lim_number, t.var_number));
     if(points[0].first != -1){
-        out<<"There exists a solution at strategy #"<<points[0].first;
+        int res = 0;
+        if(season == "Winter"){
+            res = points[0].first;
+        }else if(season == "Spring"){
+            res = 3 + points[0].first;
+        }else if(season == "Summer"){
+            res = 6 + points[0].first;
+        }else if(season == "Autumn"){
+            res = 9 + points[0].first;
+        }
+        out<<"There exists a solution at strategy #"<<res;
     }else{
         simplex(&t);
         out<<"No Saddle Point!\nSolving with Simplex Method:\n\n"<<t.out.str();
