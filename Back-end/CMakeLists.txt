@@ -5,9 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
+
 add_executable(Back_end
         main.cpp
         matrix.h
-        matrix.cpp matrix.cpp
-        Data_Final_Table.txt
-        Seasons/Winter.txt)
+        matrix.cc matrix.cc)

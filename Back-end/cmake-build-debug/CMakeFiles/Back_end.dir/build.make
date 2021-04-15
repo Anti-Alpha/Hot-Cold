@@ -89,29 +89,29 @@ CMakeFiles/Back_end.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Back_end.dir/main.cpp.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/main.cpp -o CMakeFiles/Back_end.dir/main.cpp.s
 
-CMakeFiles/Back_end.dir/matrix.cpp.o: CMakeFiles/Back_end.dir/flags.make
-CMakeFiles/Back_end.dir/matrix.cpp.o: ../matrix.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Back_end.dir/matrix.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Back_end.dir/matrix.cpp.o -c /Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cpp
+CMakeFiles/Back_end.dir/matrix.cc.o: CMakeFiles/Back_end.dir/flags.make
+CMakeFiles/Back_end.dir/matrix.cc.o: ../matrix.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Back_end.dir/matrix.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Back_end.dir/matrix.cc.o -c /Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cc
 
-CMakeFiles/Back_end.dir/matrix.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Back_end.dir/matrix.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cpp > CMakeFiles/Back_end.dir/matrix.cpp.i
+CMakeFiles/Back_end.dir/matrix.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Back_end.dir/matrix.cc.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cc > CMakeFiles/Back_end.dir/matrix.cc.i
 
-CMakeFiles/Back_end.dir/matrix.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Back_end.dir/matrix.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cpp -o CMakeFiles/Back_end.dir/matrix.cpp.s
+CMakeFiles/Back_end.dir/matrix.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Back_end.dir/matrix.cc.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cc -o CMakeFiles/Back_end.dir/matrix.cc.s
 
 # Object files for target Back_end
 Back_end_OBJECTS = \
 "CMakeFiles/Back_end.dir/main.cpp.o" \
-"CMakeFiles/Back_end.dir/matrix.cpp.o"
+"CMakeFiles/Back_end.dir/matrix.cc.o"
 
 # External object files for target Back_end
 Back_end_EXTERNAL_OBJECTS =
 
 Back_end: CMakeFiles/Back_end.dir/main.cpp.o
-Back_end: CMakeFiles/Back_end.dir/matrix.cpp.o
+Back_end: CMakeFiles/Back_end.dir/matrix.cc.o
 Back_end: CMakeFiles/Back_end.dir/build.make
 Back_end: CMakeFiles/Back_end.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable Back_end"

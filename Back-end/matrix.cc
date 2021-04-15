@@ -399,6 +399,7 @@ void matrixGameSolver(const v8::FunctionCallbackInfo<v8::Value>& args){
     S_Table t = getdata(maIN);
     maIN.close();
     Point p = sPoint(t.a, t.lim_number, t.var_number);
+    stringstream out;
     int res = 0;
     if(p.x != -1){
         if(season == "Winter"){
@@ -410,12 +411,14 @@ void matrixGameSolver(const v8::FunctionCallbackInfo<v8::Value>& args){
         }else if(season == "Autumn"){
             res = 9 + p.x;
         }
+        out<<"The strategy for company is #"<<res;
     }else{
         res = -1;
-        // simplex(&t);
-        //
-        // out<<"No Saddle Point!\nSolving with Simplex Method:\n\n"<<t.out.str();
+        simplex(&t);
+        out<<"No Saddle Point!\nSolving with Simplex Method:\n\n"<<t.out.str();
     }
+    ofstream outfile("./output.txt");
+    outfile<<out.str();
 
     auto total = v8::Number::New(isolate, res);
 

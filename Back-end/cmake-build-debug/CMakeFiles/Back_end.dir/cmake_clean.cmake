@@ -2,7 +2,7 @@ file(REMOVE_RECURSE
   "Back_end"
   "Back_end.pdb"
   "CMakeFiles/Back_end.dir/main.cpp.o"
-  "CMakeFiles/Back_end.dir/matrix.cpp.o"
+  "CMakeFiles/Back_end.dir/matrix.cc.o"
 )
 
 # Per-language clean rules from dependency scanning.

@@ -82,16 +82,10 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/Data_Final_Table.txt">
-			<Option target="Back_end"/>
-		</Unit>
-		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/Seasons/Winter.txt">
-			<Option target="Back_end"/>
-		</Unit>
 		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/main.cpp">
 			<Option target="Back_end"/>
 		</Unit>
-		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cpp">
+		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cc">
 			<Option target="Back_end"/>
 		</Unit>
 		<Unit filename="/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.h">

@@ -2,7 +2,6 @@
 // Created by fima rubin on 24.03.2021.
 //
 
-#include <vector>
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -11,8 +10,7 @@ using namespace std;
 
 #ifndef BACK_END_MATRIX_H
 #define BACK_END_MATRIX_H
-
-struct S_Table{
+struct S_Table {
     int lim_number; // number of limitations
     int var_number; // number of variables
     double *delta; // delta array which contains deltas
@@ -34,34 +32,17 @@ struct S_Table{
     string season;
 };
 
-vector <pair <int, int> > Saddle_point(vector < vector<double> > v);
+struct Point{
+int x, y;
+};
 
-void print_pair(pair <double, double> p);
-
-vector <int> Wald_criterion(vector < vector<double> > v);
-
-vector <int> Hurwitz_criterion(vector < vector<double> > v, double k);
-
-template <class T>
-void print_vector(vector <T> v);
-
-vector <int> Savage_criterion(vector < vector<double> > v);
-
-vector < vector <double> > removal(vector < vector < double > > v);
-
-bool cmp(vector<double> v1, vector<double> v2);
-
-void subtraction(vector<double> v1, vector <double> v2);
-
-void multiplication(vector<double> v1, double c);
+Point sPoint(double **a, int length, int width);
 
 void zh_gauss(double **a, double *b, int n, int m, int **coor, int length);
 
 S_Table getdata(ifstream &in);
 
 void simplex(S_Table *t);
-
-vector <vector<double>> AtoV(double **a, int n, int m);
 
 void matrixGameSolver();
 

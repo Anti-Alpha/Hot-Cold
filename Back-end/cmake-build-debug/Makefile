@@ -169,32 +169,32 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-matrix.o: matrix.cpp.o
+matrix.o: matrix.cc.o
 
 .PHONY : matrix.o
 
 # target to build an object file
-matrix.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cpp.o
-.PHONY : matrix.cpp.o
+matrix.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cc.o
+.PHONY : matrix.cc.o
 
-matrix.i: matrix.cpp.i
+matrix.i: matrix.cc.i
 
 .PHONY : matrix.i
 
 # target to preprocess a source file
-matrix.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cpp.i
-.PHONY : matrix.cpp.i
+matrix.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cc.i
+.PHONY : matrix.cc.i
 
-matrix.s: matrix.cpp.s
+matrix.s: matrix.cc.s
 
 .PHONY : matrix.s
 
 # target to generate assembly for a file
-matrix.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cpp.s
-.PHONY : matrix.cpp.s
+matrix.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Back_end.dir/build.make CMakeFiles/Back_end.dir/matrix.cc.s
+.PHONY : matrix.cc.s
 
 # Help Target
 help:

@@ -327,7 +327,7 @@ endif
 
 quiet_cmd_regen_makefile = ACTION Regenerating $@
 cmd_regen_makefile = cd $(srcdir); /usr/local/lib/node_modules/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/Users/fimarubin/Library/Caches/node-gyp/14.16.1" "-Dnode_gyp_dir=/usr/local/lib/node_modules/node-gyp" "-Dnode_lib_file=/Users/fimarubin/Library/Caches/node-gyp/14.16.1/<(target_arch)/node.lib" "-Dmodule_root_dir=/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end" "-Dnode_engine=v8" "--depth=." "-Goutput_dir=." "--generator-output=build" -I/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/build/config.gypi -I/usr/local/lib/node_modules/node-gyp/addon.gypi -I/Users/fimarubin/Library/Caches/node-gyp/14.16.1/include/node/common.gypi "--toplevel-dir=." binding.gyp
-Makefile: $(srcdir)/../../../../../../../../usr/local/lib/node_modules/node-gyp/addon.gypi $(srcdir)/binding.gyp $(srcdir)/../../../../../../Library/Caches/node-gyp/14.16.1/include/node/common.gypi $(srcdir)/build/config.gypi
+Makefile: $(srcdir)/build/config.gypi $(srcdir)/binding.gyp $(srcdir)/../../../../../../../../usr/local/lib/node_modules/node-gyp/addon.gypi $(srcdir)/../../../../../../Library/Caches/node-gyp/14.16.1/include/node/common.gypi
 	$(call do_cmd,regen_makefile)
 
 # "all" is a concatenation of the "all" targets from all the included
