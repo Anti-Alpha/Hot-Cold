@@ -1,2 +1,5 @@
-const addon = require('./build/Release/addon.node');
-addon.matrixGameSolver();
+const addon = require('./Back-end/build/Release/addon.node')
+
+function mxGameSol(){
+  addon.matrixGameSolver();
+}
