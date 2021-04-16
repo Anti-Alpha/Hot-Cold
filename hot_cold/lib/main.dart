@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 void main() => runApp(MyApp());
 
@@ -405,6 +407,7 @@ class MyHomeState extends State<MyHome> {
                   ),
                   child: MaterialButton(
                     onPressed: () {
+                      lalal();
                       Navigator.push(context, MaterialPageRoute(builder: (context) => NewScreen()));
                     },
                     child: Center (
@@ -428,17 +431,28 @@ class MyHomeState extends State<MyHome> {
   }
 }
 
+String lmaojsshitt;
+lalal() async {
+lmaojsshitt = await rootBundle.loadString('assets/Back-end/Main.js');
+}
+
 class NewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('New Screen')),
-      body: Center(
-        child: Text(
-          'This is a new screen',
-          style: TextStyle(fontSize: 24.0),
-        ),
-      ),
+        body: LunchWebView(lmaojsshitt),
     );
+  }
+}
+class LunchWebView extends StatelessWidget {
+  final String text;
+  LunchWebView(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    final FlutterWebviewPlugin flutterWebviewPlugin = FlutterWebviewPlugin();
+    flutterWebviewPlugin.launch('https://www.google.com');
+    flutterWebviewPlugin.evalJavascript(text);
+    return Container();
   }
 }

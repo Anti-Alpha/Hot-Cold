@@ -31,6 +31,10 @@ dependencies:
   country_list_pick: ^1.0.0+3
   country_code_picker: 2.0.1
   flutter_screenutil: ^0.4.2
+  url_launcher: ^6.0.3
+  js: any
+  flutter_webview_plugin: ^0.3.11
+
 
 
 
@@ -61,6 +65,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/Back-end/Main.js
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
