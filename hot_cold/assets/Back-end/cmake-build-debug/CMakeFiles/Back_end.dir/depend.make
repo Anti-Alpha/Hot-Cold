@@ -4,6 +4,6 @@
 CMakeFiles/Back_end.dir/main.cpp.o: ../main.cpp
 CMakeFiles/Back_end.dir/main.cpp.o: ../matrix.h
 
-CMakeFiles/Back_end.dir/matrix.cpp.o: ../matrix.cpp
-CMakeFiles/Back_end.dir/matrix.cpp.o: ../matrix.h
+CMakeFiles/Back_end.dir/matrix.cc.o: ../matrix.cc
+CMakeFiles/Back_end.dir/matrix.cc.o: ../matrix.h
 

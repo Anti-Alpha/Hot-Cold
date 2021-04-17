@@ -385,10 +385,14 @@ void simplex(S_Table *t){
 
 void matrixGameSolver(const v8::FunctionCallbackInfo<v8::Value>& args){
     v8::Isolate* isolate = args.GetIsolate();
-
+    ofstream outfile("./output.txt");
     string season;
     ifstream in("./data.txt");
+    if(!in.is_open()){
+        outfile<<"Could not open data.txt file\n";
+    }
     in>>season;
+    outfile<<season<<endl;
     in.close();
     for(int i = 0; i < season.length(); i++){
         tolower(season[i]);
@@ -396,6 +400,9 @@ void matrixGameSolver(const v8::FunctionCallbackInfo<v8::Value>& args){
     toupper(season[0]);
     string file_path = "./Seasons/"+season+".txt";
     ifstream maIN(file_path);
+    if(!maIN.is_open()){
+        outfile<<"Could not open " + file_path + " file\n";
+    }
     S_Table t = getdata(maIN);
     maIN.close();
     Point p = sPoint(t.a, t.lim_number, t.var_number);
@@ -417,9 +424,8 @@ void matrixGameSolver(const v8::FunctionCallbackInfo<v8::Value>& args){
         simplex(&t);
         out<<"No Saddle Point!\nSolving with Simplex Method:\n\n"<<t.out.str();
     }
-    ofstream outfile("./output.txt");
     outfile<<out.str();
-
+    
     auto total = v8::Number::New(isolate, res);
 
     args.GetReturnValue().Set(total);

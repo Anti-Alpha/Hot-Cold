@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/main.cpp" "/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/cmake-build-debug/CMakeFiles/Back_end.dir/main.cpp.o"
-  "/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/matrix.cc" "/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/Back-end/cmake-build-debug/CMakeFiles/Back_end.dir/matrix.cc.o"
+  "/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/hot_cold/assets/Back-end/main.cpp" "/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/hot_cold/assets/Back-end/cmake-build-debug/CMakeFiles/Back_end.dir/main.cpp.o"
+  "/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/hot_cold/assets/Back-end/matrix.cc" "/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/hot_cold/assets/Back-end/cmake-build-debug/CMakeFiles/Back_end.dir/matrix.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
