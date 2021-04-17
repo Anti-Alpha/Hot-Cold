@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:http/http.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,7 +19,7 @@ class Responsive {
 }
 
 void _navigateToNextScreen(BuildContext context) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewScreen()));
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => BodyWidget()));
 }
 
 
@@ -35,6 +37,9 @@ class MyAppState extends State<MyApp> {
   }
 }
 
+var season;
+var serverResponse;
+
 class MyHome extends StatefulWidget {
   @override
   MyHomeState createState() => new MyHomeState();
@@ -42,7 +47,6 @@ class MyHome extends StatefulWidget {
 
 class MyHomeState extends State<MyHome> {
   var countt = '';
-  var season;
 
   Color colorwin = Color(0xff2D3039);
   Color colorspr = Color(0xff2D3039);
@@ -54,8 +58,18 @@ class MyHomeState extends State<MyHome> {
       countt = newValue.name;
     });
   }
+  _makeGetRequest() async {
+    Response response = await get(Uri.parse(_localhost()));
+    setState(() {
+      serverResponse = response.body;
+    });
+  }
 
+  String _localhost() {
+    print('http://10.0.2.2:3000/season/' + season);
+    return 'http://10.0.2.2:3000/season/' + season;
 
+  }
   bool win = false, spr = false, sum = false, aut = false;
 
   // AnimationController _animationController;
@@ -201,7 +215,7 @@ class MyHomeState extends State<MyHome> {
                                 spr = false;
                                 sum = false;
                                 aut = false;
-                                season = 'winter';
+                                season = 'Winter';
                                 print(countt);
                               });
                             },
@@ -255,7 +269,7 @@ class MyHomeState extends State<MyHome> {
                                 spr = true;
                                 sum = false;
                                 aut = false;
-                                season = 'spring';
+                                season = 'Spring';
                               });
                             },
                             splashColor: Colors.transparent,
@@ -307,7 +321,7 @@ class MyHomeState extends State<MyHome> {
                                 spr = false;
                                 sum = true;
                                 aut = false;
-                                season = 'summer';
+                                season = 'Summer';
                               });
                             },
                             splashColor: Colors.transparent,
@@ -359,7 +373,7 @@ class MyHomeState extends State<MyHome> {
                                 spr = false;
                                 sum = false;
                                 aut = true;
-                                season = 'autumn';
+                                season = 'Autumn';
                               });
                             },
                             splashColor: Colors.transparent,
@@ -408,7 +422,8 @@ class MyHomeState extends State<MyHome> {
                   child: MaterialButton(
                     onPressed: () {
                       lalal();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => NewScreen()));
+                      _makeGetRequest();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BodyWidget()));
                     },
                     child: Center (
                       child: Text(
@@ -436,23 +451,42 @@ lalal() async {
 lmaojsshitt = await rootBundle.loadString('assets/Back-end/Main.js');
 }
 
-class NewScreen extends StatelessWidget {
+
+class BodyWidget extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: LunchWebView(lmaojsshitt),
-    );
+  BodyWidgetState createState() {
+    return new BodyWidgetState();
   }
 }
-class LunchWebView extends StatelessWidget {
-  final String text;
-  LunchWebView(this.text);
+
+class BodyWidgetState extends State<BodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final FlutterWebviewPlugin flutterWebviewPlugin = FlutterWebviewPlugin();
-    flutterWebviewPlugin.launch('https://www.google.com');
-    flutterWebviewPlugin.evalJavascript(text);
-    return Container();
+
+    return Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          width: 200,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(serverResponse),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
+
+
 }
+
+// final String text;
+// LunchWebView(this.text);
