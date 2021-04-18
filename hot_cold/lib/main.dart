@@ -38,7 +38,7 @@ class MyAppState extends State<MyApp> {
 }
 
 var season;
-var serverResponse;
+var serverResponse = '';
 
 class MyHome extends StatefulWidget {
   @override
@@ -66,8 +66,8 @@ class MyHomeState extends State<MyHome> {
   }
 
   String _localhost() {
-    print('http://10.0.2.2:3000/season/' + season);
-    return 'http://10.0.2.2:3000/season/' + season;
+    print('https://02bc96d10276.ngrok.io/season/' + season);
+    return 'https://02bc96d10276.ngrok.io/season/' + season;
 
   }
   bool win = false, spr = false, sum = false, aut = false;
@@ -421,7 +421,6 @@ class MyHomeState extends State<MyHome> {
                   ),
                   child: MaterialButton(
                     onPressed: () {
-                      lalal();
                       _makeGetRequest();
                       Navigator.push(context, MaterialPageRoute(builder: (context) => BodyWidget()));
                     },
@@ -446,10 +445,6 @@ class MyHomeState extends State<MyHome> {
   }
 }
 
-String lmaojsshitt;
-lalal() async {
-lmaojsshitt = await rootBundle.loadString('assets/Back-end/Main.js');
-}
 
 
 class BodyWidget extends StatefulWidget {
@@ -460,28 +455,91 @@ class BodyWidget extends StatefulWidget {
 }
 
 class BodyWidgetState extends State<BodyWidget> {
+@override
+  String get myVariable => serverResponse;
+@override
 
-  @override
   Widget build(BuildContext context) {
 
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: SizedBox(
-          width: 200,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
+    return MaterialApp(
 
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(serverResponse),
-              ),
-            ],
+      home: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Color(0xff1D2026),
+          shadowColor: Color(0xff1D2026),
+          title: Text(season,
+            style: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.w100,
+                fontSize: 23,
+                color: Color(0xFFE6E6E6)),
+
           ),
         ),
+      body: new Stack(
+          children: <Widget>[
+            Container(
+              height: 100,
+              width: 100,
+              constraints: BoxConstraints.expand(),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: new AssetImage('assets/images/aa.png'),
+                      fit: BoxFit.cover)),
+            ),
+        Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Align(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 250,
+                    ),
+                    Container(
+                        decoration: BoxDecoration(
+                      color: Color(0xff2C2F38),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                        height: 150,
+                        width: 150,
+                        child: new Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(myVariable,
+                                  style: TextStyle(
+                                      fontFamily: 'OpenSans',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 10,
+                                      color: Color(0xFFE6E6E6)),
+
+                                ),
+                              ),
+                            ]
+                        )
+
+                    ),
+
+
+
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+
+
+
+      ],
       ),
+      ),
+
     );
   }
 
@@ -490,3 +548,5 @@ class BodyWidgetState extends State<BodyWidget> {
 
 // final String text;
 // LunchWebView(this.text);
+
+

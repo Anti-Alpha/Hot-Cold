@@ -1,8 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hot_cold">
-   <application
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- This Line -->
+
+    <application android:usesCleartextTraffic="true">
+    </application>
+
+    <application
         android:label="hot_cold"
-        android:icon="@mipmap/ic_launcher">
+    android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
