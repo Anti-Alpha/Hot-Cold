@@ -4,7 +4,7 @@
 
 The project allows you to determine the most profitable tailoring of clothes in the selected season
 
-<img src="Screenshot_20210420-181839.jpg" alt="Screenshot_20210420-181839" style="zoom: 10%;" />
+<img src="Screenshot_20210420-181839.jpg" alt="Screenshot_20210420-181839"  width="200" />
 
 ## Installation
 
@@ -16,11 +16,11 @@ Android:
 
 For example, let's choose summer. Next, click on the "Continue" button. Then we will see the second screen.
 
-<img src="Screenshot_20210422-171402.jpg" alt="Screenshot_20210422-171402" style="zoom:10%;" />
+<img src="Screenshot_20210422-171402.jpg" alt="Screenshot_20210422-171402"  width="200" />
 
 The number of the strategy to be selected will be written on it. By clicking on the button below, you can see the available strategies.
 
-<img src="Screenshot_20210422-171746.jpg" alt="Screenshot_20210422-171746" style="zoom:10%;" />
+<img src="Screenshot_20210422-171746.jpg" alt="Screenshot_20210422-171746"  width="200"  />
 
 ## Release History
 
