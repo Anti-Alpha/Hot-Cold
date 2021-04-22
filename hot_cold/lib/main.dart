@@ -525,7 +525,34 @@ class BodyWidgetState extends State<BodyWidget> {
 
                     ),
 
-
+                    Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child:  Container(
+                          height: 70,
+                          width: 390,
+                          margin: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Color(0xff2D3039),
+                            borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                          ),
+                          child: MaterialButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => LunchWebView()));
+                            },
+                            child: Center (
+                              child: Text(
+                                'Open Strategies',
+                                style: TextStyle(
+                                    fontFamily: 'OpenSans',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 17,
+                                    color: Color(0xFFE6E6E6)),
+                              ),),
+                          ),
+                        ),
+                      ),
+                    ),
 
                   ],
                 ),
@@ -550,3 +577,48 @@ class BodyWidgetState extends State<BodyWidget> {
 // LunchWebView(this.text);
 
 
+class LunchWebView extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() => new _LunchWebViewState();
+
+
+}
+
+class _LunchWebViewState extends State<LunchWebView> {
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return new WillPopScope(
+      child: new Scaffold(
+        appBar: new AppBar(
+          centerTitle: true,
+          backgroundColor: Color(0xff1D2026),
+          shadowColor: Color(0xff1D2026),
+          title: Text('Strategies',
+            style: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.w100,
+                fontSize: 23,
+                color: Color(0xFFE6E6E6)),
+
+          ),
+        ),
+        body:  new MaterialApp(
+          routes: {
+            "/": (_) => new WebviewScaffold(
+              url: "https://github.com/Anti-Alpha/Hot-Cold/blob/master/data.csv",
+              appBar: new AppBar(
+
+                title: new Text("Strategies"),
+              ),
+            ),
+          },
+        ),
+      ),
+    );
+
+  }
+}
