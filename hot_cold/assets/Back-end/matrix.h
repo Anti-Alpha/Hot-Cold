@@ -12,7 +12,8 @@ using namespace std;
 #define BACK_END_MATRIX_H
 struct S_Table {
     int lim_number; // number of limitations
-    int var_number; // number of variables
+    int var_number;  // number of variables
+    int strategy; 
     double *delta; // delta array which contains deltas
     double **a; // system itself
     int *sign; // signs of inequalities

@@ -4,9 +4,10 @@
 #include <cmath>
 #include <cctype>
 #include "/usr/local/include/node/node.h"
-
+ 
 using namespace std;
-
+ 
+// Getdata from 'season.txt', where season is either Winter, or Summer, or Spring, or Autumn and fill the matrix table
 S_Table getdata(ifstream &in){
     S_Table t;
     t.out.str(string());
@@ -35,75 +36,73 @@ S_Table getdata(ifstream &in){
         t.sign[i] = -1;
         t.b[i] = 1.0;
     }
-
+ 
     // Scan Z-function
     for(int i = 0; i < t.var_number; i++){
         t.z[i] = 1;
     }
-
-    // Initial left of function with zeroes
+ 
+    // Initialize right part of Z-function with zeroes
     for(int i = t.var_number; i < t.width; i++){
         t.z[i] = 0;
     }
-
-    // Initial tendency of Z-function
+ 
+    // Initialize tendency of Z-function
     t.way = "max";
     t.minimax = 1;
-
+ 
     // Coordinates of basis points in A-matrix
     for(int i = 0; i < t.height; i++){
         t.coor[i] = new int[2];
         t.coor[i][0] = i;
         t.coor[i][1] = i + t.var_number;
     }
-
+ 
     for(int i = 0; i < t.width; i++){
         t.delta[i] = -1;
     }
-
+ 
     // Initializing first Cb
     for (int i = 0; i < t.height; i++) {
         t.cb[i] = new double[2];
         t.cb[i][0] = i + t.var_number;
         t.cb[i][1] = t.z[i + t.var_number];
     }
-
+ 
     //Initializing Y
     t.y = new double[t.width];
-
+ 
     t.nu = 0;
-
+ 
     return t;
 }
-
+ 
+// Method of Zhordano-Gauss to make columns look (0, 0, ..., 0, 1, 0, ...), where 1 is in the place of one of basis points
 void zh_gauss(double **a, double *b, int n, int m, int **coor, int length){
     for(int k = 0; k < length; k++){
         int row = coor[k][0];
         int column = coor[k][1];
         double base = a[row][column];
-//        cout<<base<<" "<<row<<" "<<column<<endl;
         for(int i = 0; i < m; i++){
             a[row][i]/=base;
         }
         b[row]/=base;
         for(int i = 0; i < n; i++){
             double div = a[i][column];
-//            cout<<div<<endl;
             for(int j = 0; j < m; j++) {
                 if (i != row){
-//                    cout<<"a["<<i<<"]["<<j<<"] = "<<a[i][j]<<" - "<<a[row][j]<<" * "<<div<<" = "<<a[i][j] - a[row][j]*div<<endl;
                     a[i][j] -= a[row][j] * div;
                 }else
                     break;
             }
             if(i != row) {
-//                cout<<"b["<<i<<"] = "<<b[i]<<" - "<<b[row]<<"*"<<div<<" = "<<b[i] - b[row]*div<<endl;
                 b[i] -= b[row] * div;
             }
         }
     }
 }
-
+ 
+// Saddle Point search
 Point sPoint(double **a, int length, int width){
     double *minr = new double[length];
     double *maxc = new double[width];
@@ -119,6 +118,7 @@ Point sPoint(double **a, int length, int width){
         minr[x++] = min;
         min = 10000000;
     }
+    // miin in columns
     for(int i = 0, x = 0; i < width; i++){
         for(int j = 0; j < length; j++){
             if(a[j][i] > max)
@@ -127,10 +127,10 @@ Point sPoint(double **a, int length, int width){
         maxc[x++] = max;
         max = -10000000;
     }
-
+ 
     sort(minr, minr+length);
     sort(maxc, maxc+width);
-
+ 
     if(minr[length - 1] == maxc[0]){
         double t = minr[length - 1];
         for(int i = 0; i < length; i++){
@@ -146,243 +146,286 @@ Point sPoint(double **a, int length, int width){
     }
     return p;
 }
-
+ 
+// Simplex method itself
 void simplex(S_Table *t){
-
-    stringstream out;
-
-    out<<"Initial system: \n";
-    for(int i = 0; i < t->height; i++){
-        for(int j = 0; j < t->var_number; j++){
-            if(t->a[i][j] >= 0 && j != 0){
-                out << " + "<<t->a[i][j]<<"*X"<< j+1;
-            }else{
-                out << t->a[i][j]<< "*X"<<j+1;
-            }
-        }
-        switch(t->sign[i]){
-            case -1:
-                out << " <= ";
-                break;
-            case 0:
-                out << " = ";
-                break;
-            case 1:
-                out << " >= ";
-                break;
-            default:
-                break;
-        }
-        out << t->b[i] << endl;
-    }
-
-    // print Z-function
-    out << "Z-function: ";
-    for (int i = 0; i < t->width; i++) {
-        if (t->z[i] >= 0 && i != 0)
-            out << "+ " << t->z[i] << "*X" << i + 1 << " ";
-        else
-            out << t->z[i] << "*X" << i + 1 << " ";
-    }
-    out << "-> " << t->way << "\n\n";
-
-    out<<"Coordinates of initial basis points:\n";
-    for(int i = 0; i < t->height; i++){
-        out<<"coor "<<i<<": "<<"("<<t->coor[i][0]<<", "<<t->coor[i][1]<<")\n";
-    }
-
-    int x = 1;
-    out<<"\nInitial Cb:\n";
-    for(int i = 0; i < t->height; i++){
-        out<<"basis"<<t->cb[i][0]<<": "<<t->cb[i][1]<<endl;
-    }
-
-
-    int solutions = -1; // 0 - no solutions, 1 - there is one solution, 2 - there are infinitely many solutions
-    // Iterations
-    while(true) {
-        out<<"\n---------------------------Iteration #"<<x<<"---------------------------\n";
-        t->delta0 = 0;
-        bool f = false;
-
-        zh_gauss(t->a, t->b, t->height, t->width, t->coor, t->height);
-
-        //Counting and printing deltas
-        // *delta
-        for (int i = 0; i < t->width; i++) {
-            t->delta[i] = 0;
-            for (int j = 0; j < t->height; j++) {
-                t->delta[i] += t->a[j][i] * t->cb[j][1];
-            }
-            t->delta[i] -= t->z[i];
-        }
-        // delta0
-        for (int i = 0; i < t->height; i++) {
-            t->delta0 += t->cb[i][1] * t->b[i];
-        }
-        // Finding index of maximum element in deltas;
-        double max = -10000;
-        int maxi = 0; // The column to make basic column
-        // Finding the column for the next basic
-        for (int i = 0; i < t->width; i++) {
-            if (t->delta[i] < 0 && abs(t->delta[i]) >= max) {
-                max = abs(t->delta[i]);
-                maxi = i;
-            }
-        }
-
-        // Counting theta
-        for (int i = 0; i < t->height; i++) {
-            t->theta[i] = t->b[i] / t->a[i][maxi];
-        }
-        double min = 10000;
-        int mini; // The row to make basic row
-        // Finding the row fot the next basics
-        for (int i = 0; i < t->height; i++) {
-            if (t->theta[i] < min) {
-                min = t->theta[i];
-                mini = i;
-            }
-        }
-
-        // Changing coordinates of basis points
-        t->coor[mini][0] = mini;
-        t->coor[mini][1] = maxi;
-
-        // Printing Simplex-table
-        for(int i = 0; i < t->height; i++){
-            out<<"X"<<t->cb[i][0] + 1<<"|";
-            out<<t->cb[i][1]<<"|";
-            out<<t->b[i]<<"|";
-            for(int j = 0; j < t->width; j++){
-                out<<t->a[i][j]<<"|";
-            }
-            out<<t->theta[i]<<"|\n";
-            out<<"------------------------------------------------------\n";
-        }
-        out<<"\t|"<<t->delta0<<"|";
-        for(int i = 0; i < t->width; i++){
-            out<<t->delta[i]<<"|";
-        }
-        out<<"\n";
-        for(int i = 0; i < t->height; i++){
-            out<<"X"<<t->cb[i][0] + 1<<" = "<<t->cb[i][1]<<endl;
-        }
-
-        // checking for infinite solution or 1 solution
-        for(int i = 0; i < t->width; i++){
-            if(t->delta[i] < 0){
-                f = true;
-                break;
-            }
-            if(t->delta[i] == 0){
-                bool presents = false;
-                for(int j = 0; j < t->height; j++){
-                    if(t->cb[j][0] == i) {
-                        presents = true;
-                        break;
-                    }
-                }
-                if(!presents){
-                    solutions = 2;
-                    break;
-                }
-            }
-        }
-        if(solutions == 2) break;
-        if(!f){
-            solutions = 1;
-            out<<"Completed, no more steps needed\n";
-            break;
-        }
-        // Checking for infinity of Z -> incompatibility of system
-        f = false;
-        for(int i = 0; i < t->height; i++){
-            if(t->a[i][maxi] > 0){
-                f = true;
-                break;
-            }
-        }
-        if(!f){
-            solutions = 0;
-            break;
-        }
-        t->cb[mini][0] = maxi;
-        t->cb[mini][1] = t->z[mini];
-        x++;
-        if(x == 1000) break;
-    }
-
-    switch (solutions) {
-        case 1:
-            out << "\n\n\n---------------------------Task Solved---------------------------\n";
-            out << "Zmax = " << t->delta0 << endl;
-            out << "Y = (";
-            for (int i = 0; i < t->width; i++) {
-                bool exists = false;
-                int r;
-                for (int j = 0; j < t->height; j++) {
-                    if (t->cb[j][0] == i) {
-                        r = j;
-                        exists = true;
-                        break;
-                    }
-                }
-                t->y[i] = (exists ? t->b[r] : 0);
-                out << t->y[i] << (i == t->width - 1 ? ")\n" : ", ");
-            }
-            t->nu = 1/t->delta0;
-            out << "Nu: " << t->nu << " - the price of game\n";
-            out<<"Y*Nu = "<<"(";
-            for(int i = 0; i < t->var_number; i++){
-                t->y[i]*=t->nu;
-                out<<t->y[i]<<((i == t->var_number - 1) ? ")\n": ", ");
-            }
-            out<<"\n\n\n---------------------------Results---------------------------\n";
-            for(int i = 0; i < t->var_number; i++){
-                out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t->y[i]<<"\n";
-            }
-            break;
-        case 0:
-            out<<"NO SOLUTIONS\n";
-            break;
-        case 2:
-            out<<"Infinitely many solutions\nZmax = " << t->delta0 <<"\nFor example:\n";
-            out << "Y = (";
-            for (int i = 0; i < t->width; i++) {
-                bool exists = false;
-                int r;
-                for (int j = 0; j < t->height; j++) {
-                    if (t->cb[j][0] == i) {
-                        r = j;
-                        exists = true;
-                        break;
-                    }
-                }
-                t->y[i] = (exists ? t->b[r] : 0);
-                out << t->y[i] << (i == t->width - 1 ? ")\n" : ", ");
-            }
-            t->nu = 1/t->delta0;
-            out << "Nu: " << t->nu << " - the price of game\n";
-            out<<"Y*Nu = "<<"(";
-            for(int i = 0; i < t->var_number; i++){
-                t->y[i]*=t->nu;
-                out<<t->y[i]<<((i == t->var_number - 1) ? ")\n": ", ");
-            }
-            out<<"\n\n\n---------------------------Results---------------------------\n";
-            for(int i = 0; i < t->var_number; i++){
-                out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t->y[i]<<"\n";
-            }
-            break;
-        default:
-            out<<"SOME SHIT, MAN";
-            break;
-
-    }
-
-    t->out<<out.str();
+ 
+   stringstream out;
+ 
+   out<<"Initial system: \n";
+   for(int i = 0; i < t->height; i++){
+       for(int j = 0; j < t->var_number; j++){
+           if(t->a[i][j] >= 0 && j != 0){
+               out << " + "<<t->a[i][j]<<"*X"<< j+1;
+           }else{
+               out << t->a[i][j]<< "*X"<<j+1;
+           }
+       }
+       switch(t->sign[i]){
+           case -1:
+               out << " <= ";
+               break;
+           case 0:
+               out << " = ";
+               break;
+           case 1:
+               out << " >= ";
+               break;
+           default:
+               break;
+       }
+       out << t->b[i] << endl;
+   }
+ 
+   // print Z-function
+   out << "Z-function: ";
+   for (int i = 0; i < t->width; i++) {
+       if (t->z[i] >= 0 && i != 0)
+           out << "+ " << t->z[i] << "*X" << i + 1 << " ";
+       else
+           out << t->z[i] << "*X" << i + 1 << " ";
+   }
+   out << "-> " << t->way << "\n\n";
+ 
+   if(t->height == 2 && t->var_number == 2){
+       out<<"Company should choose:\nStrategy #1 with probability: "<<(t->a[1][1]-t->a[1][0])/(t->a[1][1]-t->a[0][1] + t->a[0][0]-t->a[1][0]);
+       out<<"\nStrategy #2 with probability: "<<(t->a[0][0]-t->a[0][1])/(t->a[1][1]-t->a[0][1] + t->a[0][0]-t->a[1][0]);
+       t->out<<out.str();
+       return ;
+   }
+ 
+   out<<"Coordinates of initial basis points:\n";
+   for(int i = 0; i < t->height; i++){
+       out<<"coor "<<i + 1<<": "<<"("<<t->coor[i][0] + 1<<", "<<t->coor[i][1] + 1<<")\n";
+   }
+ 
+   int x = 1;
+   out<<"\nInitial Cb:\n";
+   for(int i = 0; i < t->height; i++){
+       out<<"basis"<<t->cb[i][0] + 1<<": "<<t->cb[i][1]<<endl;
+   }
+ 
+   for(int i = 0; i < t->width; i++){
+       if (i < t->var_number) t->delta[i] = -1;
+       else t->delta[i] = 0;
+   }
+ 
+   t->delta0 = 0;
+ 
+   int mini, maxi;
+ 
+ 
+   int solutions = -1; // 0 - no solutions, 1 - there is one solution, 2 - there are infinitely many solutions
+   // Iterations
+   while(true) {
+       bool f = false;
+ 
+       bool all_positive = true;
+       for(int i = 0; i < t->width; i++){
+           if(t->delta[i] < 0){
+               out<<"\nStill not an optimal solution. Some deltas are less than zero\n";
+               all_positive = false;
+               break;
+           }
+           if(t->delta[i] == 0){
+               bool presents = false;
+               for(int j = 0; j < t->height; j++){
+                   if(t->cb[j][0] == i) {
+                       presents = true;
+                       break;
+                   }
+               }
+               if(!presents){
+                   solutions = 2;
+                   break;
+               }
+           }
+       }
+ 
+       if(solutions == 2){
+           out<<"\nFound delta equal to zero which row is not basis. Infinite solutions. Breaking\n";
+           break;
+       }
+ 
+       if(all_positive){
+           solutions = 1;
+           out<<"\nNo negative deltas => found an optimal solution\n";
+           break;
+       }
+ 
+       out<<"\n---------------------------Iteration #"<<x<<"---------------------------\n";
+ 
+       // Changing coordinates of basis points
+       if(x > 1) {
+           t->coor[mini][0] = mini;
+           t->coor[mini][1] = maxi;
+ 
+           t->cb[mini][0] = maxi;
+           t->cb[mini][1] = (maxi < t->var_number) ? 1 : 0;
+       }
+ 
+       zh_gauss(t->a, t->b, t->height, t->width, t->coor, t->height);
+ 
+       //Counting deltas
+       // *delta
+       for (int i = 0; i < t->width; i++) {
+           t->delta[i] = 0;
+           for (int j = 0; j < t->height; j++) {
+               t->delta[i] += t->a[j][i] * t->cb[j][1];
+           }
+           t->delta[i] -= t->z[i];
+       }
+       // delta0
+       t->delta0 = 0;
+       for (int i = 0; i < t->height; i++) {
+           t->delta0 += t->cb[i][1] * t->b[i];
+       }
+ 
+       // Finding index of maximum element in deltas;
+       double max = -10000;
+       maxi = 0; // The column to make basic column
+       // Finding the column to make it basic
+       for (int i = 0; i < t->width; i++) {
+           if (t->delta[i] < 0 && abs(t->delta[i]) >= max) {
+               max = abs(t->delta[i]);
+               maxi = i;
+           }
+       }
+ 
+       // Checking for infinity of Z -> incompatibility of system
+       f = false;
+       for(int i = 0; i < t->height; i++){
+           if(t->a[i][maxi] > 0){
+               f = true;
+               break;
+           }
+       }
+       if(!f){
+           solutions = 0;
+           break;
+       }
+ 
+       // Counting theta
+       for (int i = 0; i < t->height; i++) {
+           if(t->a[i][maxi] > 0)
+               t->theta[i] = t->b[i] / t->a[i][maxi];
+           else
+               t->theta[i] = numeric_limits<int>::max();
+       }
+       double min = 10000;
+       mini = 0; // The row to make it basic
+       // Finding the row fot the next basics
+       for (int i = 0; i < t->height; i++) {
+           if (t->theta[i] < min) {
+               min = t->theta[i];
+               mini = i;
+           }
+       }
+ 
+       // Printing Simplex-table
+       for(int i = 0; i < t->height; i++){
+           out<<"X"<<t->cb[i][0] + 1<<"|";
+           out<<t->cb[i][1]<<"|";
+           out<<t->b[i]<<"|";
+           for(int j = 0; j < t->width; j++){
+               out<<t->a[i][j]<<"|";
+           }
+           out<<t->theta[i]<<"|\n";
+           out<<"------------------------------------------------------\n";
+       }
+       out<<"\t|"<<t->delta0<<"|";
+       for(int i = 0; i < t->width; i++){
+           out<<t->delta[i]<<"|";
+       }
+       out<<"\n";
+       for(int i = 0; i < t->height; i++){
+           out<<"X"<<t->cb[i][0] + 1<<" = "<<t->cb[i][1]<<endl;
+       }
+ 
+       x++;
+       if(x == 1000) break;
+   }
+ 
+   switch (solutions) {
+       case 1:
+           out << "\n\n\n---------------------------Task Solved---------------------------\n";
+           out << "Zmax = " << t->delta0 << endl;
+           out << "Y = (";
+           for (int i = 0; i < t->width; i++) {
+               bool exists = false;
+               int r;
+               for (int j = 0; j < t->height; j++) {
+                   if (t->cb[j][0] == i) {
+                       r = j;
+                       exists = true;
+                       break;
+                   }
+               }
+               t->y[i] = (exists ? t->b[r] : 0);
+               out << t->y[i] << (i == t->width - 1 ? ")\n" : ", ");
+           }
+           t->nu = 1/t->delta0;
+           out << "Nu: " << t->nu << " - the price of game\n";
+           out<<"Y*Nu = "<<"(";
+           for(int i = 0; i < t->var_number; i++){
+               t->y[i]*=t->nu;
+               out<<t->y[i]<<((i == t->var_number - 1) ? ")\n": ", ");
+           }
+           out<<"\n\n\n---------------------------Results---------------------------\n";
+           for(int i = 0; i < t->var_number; i++){
+               out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t->y[i]<<"\n";
+           }
+           break;
+       case 0:
+           out<<"NO SOLUTIONS\n";
+           t->strategy = -1;
+           break;
+       case 2:
+           out<<"Infinitely many solutions\nZmax = " << t->delta0 <<"\nFor example:\n";
+           out << "Y = (";
+           for (int i = 0; i < t->width; i++) {
+               bool exists = false;
+               int r;
+               for (int j = 0; j < t->height; j++) {
+                   if (t->cb[j][0] == i) {
+                       r = j;
+                       exists = true;
+                       break;
+                   }
+               }
+               t->y[i] = (exists ? t->b[r] : 0);
+               out << t->y[i] << (i == t->width - 1 ? ")\n" : ", ");
+           }
+           t->nu = 1/t->delta0;
+           out << "Nu: " << t->nu << " - the price of game\n";
+           out<<"Y*Nu = "<<"(";
+           for(int i = 0; i < t->var_number; i++){
+               t->y[i]*=t->nu;
+               out<<t->y[i]<<((i == t->var_number - 1) ? ")\n": ", ");
+           }
+           out<<"\n\n\n---------------------------Results---------------------------\n";
+           for(int i = 0; i < t->var_number; i++){
+               out<<"Strategy "<<i+1<<" company should choose with probability: "<<fixed<<setprecision(3)<<t->y[i]<<"\n";
+           }
+           break;
+       default:
+           out<<"Something wrong";
+           break;
+ 
+   }
+   int max = -1;
+   for(int i = 0; i < t->var_number; i++){
+       if(t->y[i] > max) {
+           max = t->y[i];
+           maxi = i;
+       }
+   }
+   t->strategy = maxi;
+   t->out<<out.str();
 }
-
+ 
+ 
+// The method server is calling to output the result
 void matrixGameSolver(const v8::FunctionCallbackInfo<v8::Value>& args){
     v8::Isolate* isolate = args.GetIsolate();
     ofstream outfile("./output.txt");
@@ -404,7 +447,9 @@ void matrixGameSolver(const v8::FunctionCallbackInfo<v8::Value>& args){
         outfile<<"Could not open " + file_path + " file\n";
     }
     S_Table t = getdata(maIN);
-    maIN.close();
+    maIN.close(
+ 
+            );
     Point p = sPoint(t.a, t.lim_number, t.var_number);
     stringstream out;
     int res = 0;
@@ -420,19 +465,21 @@ void matrixGameSolver(const v8::FunctionCallbackInfo<v8::Value>& args){
         }
         out<<"The strategy for company is #"<<res;
     }else{
-        res = -1;
-        simplex(&t);
-        out<<"No Saddle Point!\nSolving with Simplex Method:\n\n"<<t.out.str();
-    }
+   	   simplex(&t);
+       out<<"No Saddle Point!\nSolving with Simplex Method:\n\n"<<t.out.str();
+       res = t.strategy;
+   }
+ 
     outfile<<out.str();
     
     auto total = v8::Number::New(isolate, res);
-
+ 
     args.GetReturnValue().Set(total);
 }
-
+ 
+// Additional method for node to process c++ programs as if they were written using node.js
 void Initialize(v8::Local<v8::Object> exports){
     NODE_SET_METHOD(exports, "matrixGameSolver", matrixGameSolver);
 }
-
+ 
 NODE_MODULE(addon, Initialize);
