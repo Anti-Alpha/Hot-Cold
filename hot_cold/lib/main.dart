@@ -609,7 +609,7 @@ class _LunchWebViewState extends State<LunchWebView> {
         body:  new MaterialApp(
           routes: {
             "/": (_) => new WebviewScaffold(
-              url: "https://github.com/Anti-Alpha/Hot-Cold/blob/master/data.csv",
+              url: "https://github.com/Anti-Alpha/Hot-Cold/blob/master/%20data.csv",
               appBar: new AppBar(
 
                 title: new Text("Strategies"),
