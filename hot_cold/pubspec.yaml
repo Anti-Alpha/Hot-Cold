@@ -35,6 +35,8 @@ dependencies:
   js: any
   flutter_webview_plugin: ^0.3.11
   http: ^0.13.1
+  webview_flutter: ^2.0.4
+
 
 
 
@@ -92,3 +94,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+
