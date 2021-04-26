@@ -1,12 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'dart:async';
-import 'dart:convert';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart';
 
 void main() => runApp(MyApp());
@@ -42,8 +39,6 @@ class MyAppState extends State<MyApp> {
 
 var season;
 var serverResponse = '';
-var strategy = '';
-var photos = '';
 
 class MyHome extends StatefulWidget {
   @override
@@ -221,8 +216,6 @@ class MyHomeState extends State<MyHome> {
                                 sum = false;
                                 aut = false;
                                 season = 'Winter';
-                                strategy = '3';
-                                photos = 'assets/images/dd.png';
                                 print(countt);
                               });
                             },
@@ -277,8 +270,6 @@ class MyHomeState extends State<MyHome> {
                                 sum = false;
                                 aut = false;
                                 season = 'Spring';
-                                strategy = '4';
-                                photos = 'assets/images/ff.png';
                               });
                             },
                             splashColor: Colors.transparent,
@@ -331,8 +322,6 @@ class MyHomeState extends State<MyHome> {
                                 sum = true;
                                 aut = false;
                                 season = 'Summer';
-                                strategy = '7';
-                                photos = 'assets/images/cc.png';
                               });
                             },
                             splashColor: Colors.transparent,
@@ -385,8 +374,6 @@ class MyHomeState extends State<MyHome> {
                                 sum = false;
                                 aut = true;
                                 season = 'Autumn';
-                                strategy = '12';
-                                photos = 'assets/images/gg.png';
                               });
                             },
                             splashColor: Colors.transparent,
@@ -424,36 +411,30 @@ class MyHomeState extends State<MyHome> {
                   height: 320,
                   // color: Colors.blue,
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: FractionalOffset.bottomCenter,
-                    child: Container(
-                      height: 70,
-                      width: 390,
-                      margin: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Color(0xff2D3039),
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      ),
-                      child: MaterialButton(
-                        onPressed: () {
-                          _makeGetRequest();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => BodyWidget()));
-                        },
-                        child: Center (
-                          child: Text(
-                            'Continue',
-                            style: TextStyle(
-                                fontFamily: 'OpenSans',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 17,
-                                color: Color(0xFFE6E6E6)),
-                          ),),
-                      ),
-                    ),
+                Container(
+                  height: 70,
+                  width: 390,
+                  margin: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Color(0xff2D3039),
+                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      _makeGetRequest();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BodyWidget()));
+                    },
+                    child: Center (
+                      child: Text(
+                        'Continue',
+                        style: TextStyle(
+                            fontFamily: 'OpenSans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                            color: Color(0xFFE6E6E6)),
+                      ),),
                   ),
                 ),
-
               ],
             ),
           ],
@@ -463,6 +444,138 @@ class MyHomeState extends State<MyHome> {
 
   }
 }
+
+
+
+class BodyWidget extends StatefulWidget {
+  @override
+  BodyWidgetState createState() {
+    return new BodyWidgetState();
+  }
+}
+
+class BodyWidgetState extends State<BodyWidget> {
+  @override
+  String get myVariable => serverResponse;
+  @override
+
+  Widget build(BuildContext context) {
+
+    return MaterialApp(
+
+      home: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Color(0xff1D2026),
+          shadowColor: Color(0xff1D2026),
+          title: Text(season,
+            style: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.w100,
+                fontSize: 23,
+                color: Color(0xFFE6E6E6)),
+
+          ),
+        ),
+        body: new Stack(
+          children: <Widget>[
+            Container(
+              height: 100,
+              width: 100,
+              constraints: BoxConstraints.expand(),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: new AssetImage('assets/images/aa.png'),
+                      fit: BoxFit.cover)),
+            ),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Align(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: 250,
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xff2C2F38),
+                              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                            ),
+                            height: 150,
+                            width: 150,
+                            child: new Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(myVariable,
+                                      style: TextStyle(
+                                          fontFamily: 'OpenSans',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 10,
+                                          color: Color(0xFFE6E6E6)),
+
+                                    ),
+                                  ),
+                                ]
+                            )
+
+                        ),
+
+                        Expanded(
+                          child: Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child:  Container(
+                              height: 70,
+                              width: 390,
+                              margin: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Color(0xff2D3039),
+                                borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                              ),
+                              child: MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => LunchWebView()));
+                                },
+                                child: Center (
+                                  child: Text(
+                                    'Open Strategies',
+                                    style: TextStyle(
+                                        fontFamily: 'OpenSans',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 17,
+                                        color: Color(0xFFE6E6E6)),
+                                  ),),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+
+
+          ],
+        ),
+      ),
+
+    );
+  }
+
+
+}
+
+// final String text;
+// LunchWebView(this.text);
+
 
 class LunchWebView extends StatefulWidget {
 
@@ -510,203 +623,3 @@ class _LunchWebViewState extends State<LunchWebView> {
   }
 }
 
-class BodyWidget extends StatefulWidget {
-
-  @override
-  BodyWidgetState createState() {
-    return new BodyWidgetState();
-  }
-}
-
-class BodyWidgetState extends State<BodyWidget> {
-
-  // Future<File> FileAsset() async {
-  //   Directory tempDir = await getTemporaryDirectory();
-  //   File tempFile = File('${tempDir.path}/set_any_name.pdf');
-  //   ByteData bd = await rootBundle.load('assets/en/legal_notes.pdf');
-  //   await tempFile.writeAsBytes(bd.buffer.asUint8List(), flush: true);
-  //   return tempFile;
-  // }
-  // pdfAsset().then((file){OpenFile.open(file.path);});
-
-
-
-  Widget build(BuildContext context) {
-
-    return MaterialApp(
-
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Color(0xff1D2026),
-          shadowColor: Color(0xff1D2026),
-          title: Text(season,
-            style: TextStyle(
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.w100,
-                fontSize: 23,
-                color: Color(0xFFE6E6E6)),
-
-          ),
-        ),
-
-        body: new Stack(
-          children: <Widget>[
-            Container(
-              height: 100,
-              width: 100,
-              constraints: BoxConstraints.expand(),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: new AssetImage('assets/images/aa.png'),
-                      fit: BoxFit.cover)),
-            ),
-            Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Align(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 250,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xff2C2F38),
-                            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          ),
-                          height: 150,
-                          width: 150,
-                          child: new Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                height: 5,
-                                width: 20,
-                              ),
-                              Image.asset(
-                                photos,
-                                width: 40.0,
-                                height: 40.0,
-                              ),
-                              Container(
-                                height: 15,
-                                width: 20,
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text('You should use strategy №' + strategy,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: 'OpenSans',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                      color: Color(0xFFE6E6E6)),
-
-                                ),
-                              ),
-
-
-                            ],
-
-                          ),
-
-                        ),
-
-
-
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-                height: 100
-            ),
-            Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child:  Container(
-                  height: 70,
-                  width: 390,
-                  margin: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Color(0xff2D3039),
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  ),
-                  child: MaterialButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => LunchWebView()));
-                    },
-                    child: Center (
-                      child: Text(
-                        'Open Strategies',
-                        style: TextStyle(
-                            fontFamily: 'OpenSans',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
-                            color: Color(0xFFE6E6E6)),
-                      ),),
-                  ),
-                ),
-              ),
-            ),
-
-
-          ],
-        ),
-      ),
-
-    );
-  }
-
-
-
-}
-
-// final String text;
-// LunchWebView(this.text);
-
-
-
-
-<<<<<<< HEAD
-=======
-  @override
-  Widget build(BuildContext context) {
-    return new WillPopScope(
-      child: new Scaffold(
-        appBar: new AppBar(
-          centerTitle: true,
-          backgroundColor: Color(0xff1D2026),
-          shadowColor: Color(0xff1D2026),
-          title: Text('Strategies',
-            style: TextStyle(
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.w100,
-                fontSize: 23,
-                color: Color(0xFFE6E6E6)),
-
-          ),
-        ),
-        body:  new MaterialApp(
-          routes: {
-            "/": (_) => new WebviewScaffold(
-              url: "https://github.com/Anti-Alpha/Hot-Cold/blob/master/%20data.csv",
-              appBar: new AppBar(
-
-                title: new Text("Strategies"),
-              ),
-            ),
-          },
-        ),
-      ),
-    );
-
-  }
-}
->>>>>>> 5f63783c7f320effc0006911e9317a45184f669b
