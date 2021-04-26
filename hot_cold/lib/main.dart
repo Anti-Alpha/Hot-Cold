@@ -674,3 +674,39 @@ class BodyWidgetState extends State<BodyWidget> {
 
 
 
+<<<<<<< HEAD
+=======
+  @override
+  Widget build(BuildContext context) {
+    return new WillPopScope(
+      child: new Scaffold(
+        appBar: new AppBar(
+          centerTitle: true,
+          backgroundColor: Color(0xff1D2026),
+          shadowColor: Color(0xff1D2026),
+          title: Text('Strategies',
+            style: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.w100,
+                fontSize: 23,
+                color: Color(0xFFE6E6E6)),
+
+          ),
+        ),
+        body:  new MaterialApp(
+          routes: {
+            "/": (_) => new WebviewScaffold(
+              url: "https://github.com/Anti-Alpha/Hot-Cold/blob/master/%20data.csv",
+              appBar: new AppBar(
+
+                title: new Text("Strategies"),
+              ),
+            ),
+          },
+        ),
+      ),
+    );
+
+  }
+}
+>>>>>>> 5f63783c7f320effc0006911e9317a45184f669b
