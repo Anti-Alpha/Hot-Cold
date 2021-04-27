@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/hot_cold/assets/Back-end/matrix.cc
+matrix.h
+/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/hot_cold/assets/Back-end/matrix.h
+iomanip
+-
+algorithm
+-
+cmath
+-
+cctype
+-
+
+/Users/fimarubin/Documents/Documents_fimas_MacBook_Pro/Coding/VisualStudio/Hot-Cold/hot_cold/assets/Back-end/matrix.h
+sstream
+-
+fstream
+-
+iostream
+-
+
