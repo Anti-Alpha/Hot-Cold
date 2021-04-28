@@ -42,6 +42,8 @@ Lebedyntsev Nikita – [@Amanell](https://t.me/Amanell) – Telegram
 
 Rubin Efim – [@fimacom](https://t.me/fimacom) – Telegram
 
+Solovinska Yevheniia -  [@jansool](https://t.me/jansool) - Telegram
+
 ## Contributing
 
 1. Fork it (<https://github.com/Anti-Alpha/Hot-Cold/fork>)
