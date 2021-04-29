@@ -1,0 +1,44 @@
+name: hot_cold
+description: A new Flutter application.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  country_list_pick: ^1.0.0+3
+  country_code_picker: 2.0.1
+  flutter_screenutil: ^0.4.2
+  url_launcher: ^6.0.3
+  js: any
+  flutter_webview_plugin: ^0.3.11
+  http: ^0.13.1
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/OpenSans-Light.ttf
+          weight: 100
+        - asset: assets/fonts/OpenSans-SemiBold.ttf
+          weight: 600
+
+  assets:
+    - assets/images/
