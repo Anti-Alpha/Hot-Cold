@@ -1,5 +1,5 @@
-name: hot_cold
-description: A new Flutter application.
+name: Hot_Cold
+description: An application to get the best strategy for clothes-making company
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -19,8 +19,8 @@ dependencies:
   js: any
   flutter_webview_plugin: ^0.3.11
   http: ^0.13.1
-
-
+  connectivity: ^3.0.3
+  fluttertoast: ^8.0.6
 
 
 dev_dependencies:
