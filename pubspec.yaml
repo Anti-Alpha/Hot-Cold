@@ -1,4 +1,4 @@
-name: Hot_Cold
+name: hot_cold
 description: An application to get the best strategy for clothes-making company
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,11 +16,10 @@ dependencies:
   country_code_picker: 2.0.1
   flutter_screenutil: ^0.4.2
   url_launcher: ^6.0.3
-  js: any
-  flutter_webview_plugin: ^0.3.11
   http: ^0.13.1
   connectivity: ^3.0.3
   fluttertoast: ^8.0.6
+  google_fonts: ^2.0.0
 
 
 dev_dependencies:

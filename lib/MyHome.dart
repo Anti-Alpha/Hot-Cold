@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:http/http.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import './BodyWidget.dart';
@@ -15,11 +15,13 @@ class MyHome extends StatefulWidget {
 }
 
 class MyHomeState extends State<MyHome> {
+
+  static const platform = MethodChannel('com.example.hot_cold/getStrategy');
+
   bool connected = false;
   var Season = '';
   var ServerResponse = '';
   var countt = '';
-
   Color colorwin = Color(0xff2D3039);
   Color colorspr = Color(0xff2D3039);
   Color colorsum = Color(0xff2D3039);
@@ -31,15 +33,18 @@ class MyHomeState extends State<MyHome> {
     });
   }
 
-  _makeGetRequest() async {
-    try {
-      Response response = await get(Uri.parse(_localhost()));
-      setState(() {
-        ServerResponse = response.body;
-      });
-    }on Exception catch (_){
-      ServerResponse = '';
+  Future <void> _makeGetRequest() async {
+    String strategier;
+    try{
+      final String result = await platform.invokeMethod('getStrategy', <String, String>{'url' : _localhost()});
+      strategier = result;
+    }on PlatformException catch(e) {
+      strategier = "Failed to get strategy: '${e.message}'.";
     }
+
+    setState(() {
+      ServerResponse = strategier;
+    });
   }
 
   String _localhost() {
@@ -128,174 +133,173 @@ class MyHomeState extends State<MyHome> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Color(0xff1D2026),
-      appBar: AppBar(
-        centerTitle: true,
         backgroundColor: Color(0xff1D2026),
-        shadowColor: Color(0xff1D2026),
-        title: Image.asset(
-          'assets/images/ss.png',
-          height: 150,
-          width: 150,
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Color(0xff1D2026),
+          shadowColor: Color(0xff1D2026),
+          title: Image.asset(
+            'assets/images/ss.png',
+            height: 150,
+            width: 150,
+          ),
         ),
-      ),
-      body: new Stack(
-        children: <Widget>[
-          Container(
-            height: 100,
-            width: 100,
-            constraints: BoxConstraints.expand(),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: new AssetImage('assets/images/background.png'),
-                fit: BoxFit.cover,
+        body: new Stack(
+          children: <Widget>[
+            Container(
+              height: 100,
+              width: 100,
+              constraints: BoxConstraints.expand(),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: new AssetImage('assets/images/background.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Column(
-            children: <Widget>[
-              Container(
-                height: 50,
-                width: 300,
-                // color: Colors.blue[600],
-              ),
-              Container(
-                height: 60.0,
-                width: 370.0,
-                decoration: BoxDecoration(
-                  color: Color(0xff2C2F38),
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            Column(
+              children: <Widget>[
+                Container(
+                  height: 50,
+                  width: 300,
+                  // color: Colors.blue[600],
                 ),
-                child: CountryCodePicker(
-
-                  dialogBackgroundColor: Color(0xff1D2026),
-                  barrierColor: Color(0xff1D2026),
-                  searchStyle: TextStyle(color: Color(0xFFE6E6E6)),
-                  backgroundColor: Color(0xff1D2026),
-                  padding: EdgeInsets.all(5.0),
-                  onChanged: _handleCountryChanged,
-                  initialSelection: 'UA',
-                  flagDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                Container(
+                  height: 60.0,
+                  width: 370.0,
+                  decoration: BoxDecoration(
+                    color: Color(0xff2C2F38),
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
                   ),
-                  searchDecoration: InputDecoration(
-                    focusColor: Color(0xFFE6E6E6),
-                    hoverColor: Color(0xFFE6E6E6),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xff1D2026)),
+                  child: CountryCodePicker(
+
+                    dialogBackgroundColor: Color(0xff1D2026),
+                    barrierColor: Color(0xff1D2026),
+                    searchStyle: TextStyle(color: Color(0xFFE6E6E6)),
+                    backgroundColor: Color(0xff1D2026),
+                    padding: EdgeInsets.all(5.0),
+                    onChanged: _handleCountryChanged,
+                    initialSelection: 'UA',
+                    flagDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffAEB0B3)),
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search_sharp,
-                      color: Color(0xFFE6E6E6),
-                      size: 24.0,
-                      semanticLabel:
-                      'Text to announce in accessibility modes',
-                    ),
-                    labelStyle: TextStyle(
-                      color: Color(0xFFE6E6E6),
-                      fontSize: 13,
-                    ),
-                    // enabledBorder: OutlineInputBorder(
-                    //   // borderSide: BorderSide(
-                    //   //   color: Color(0xff585D6A),
-                    //   // ),
-                    //   borderRadius: BorderRadius.circular(10.0),
-                    // ),
-                    disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.yellow,
+                    searchDecoration: InputDecoration(
+                      focusColor: Color(0xFFE6E6E6),
+                      hoverColor: Color(0xFFE6E6E6),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xff1D2026)),
                       ),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    hintText: "Enter Your Text...",
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xffAEB0B3)),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search_sharp,
+                        color: Color(0xFFE6E6E6),
+                        size: 24.0,
+                        semanticLabel:
+                        'Text to announce in accessibility modes',
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xFFE6E6E6),
+                        fontSize: 13,
+                      ),
+                      // enabledBorder: OutlineInputBorder(
+                      //   // borderSide: BorderSide(
+                      //   //   color: Color(0xff585D6A),
+                      //   // ),
+                      //   borderRadius: BorderRadius.circular(10.0),
+                      // ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.yellow,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      hintText: "Enter Your Text...",
 
-                    hintStyle: TextStyle(
-                      color: Color(0xffAEB0B3),
-                      fontStyle: FontStyle.italic,
+                      hintStyle: TextStyle(
+                        color: Color(0xffAEB0B3),
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
+                    textStyle: TextStyle(color: Color(0xffAEB0B3)),
+                    dialogTextStyle: TextStyle(color: Color(0xffAEB0B3)),
+                    favorite: ['+38', 'UA'],
+                    showCountryOnly: true,
+                    showOnlyCountryWhenClosed: true,
+                    alignLeft: false,
                   ),
-                  textStyle: TextStyle(color: Color(0xffAEB0B3)),
-                  dialogTextStyle: TextStyle(color: Color(0xffAEB0B3)),
-                  favorite: ['+38', 'UA'],
-                  showCountryOnly: true,
-                  showOnlyCountryWhenClosed: true,
-                  alignLeft: false,
                 ),
-              ),
-              Container(
-                  margin: EdgeInsets.all(24),
-                  padding: EdgeInsets.only(top: 24),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Season',
-                    style: new TextStyle(
-                        fontSize: 20.0,
-                        fontFamily: 'OpenSans',
-                        fontWeight: FontWeight.w700,
-                        // style: TextStyle(fontFamily: 'OpenSans'),
-                        color: new Color(0xFFE6E6E6)),
-                  )
-                // color: Colors.yellow[600],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SeasonButton("Winter"),
-                  SeasonButton("Spring"),
-                  SeasonButton("Summer"),
-                  SeasonButton("Autumn")
-                ],
-              ),
-              Container(
-                height: 320,
-                // color: Colors.blue,
-              ),
-              Container(
-                height: 70,
-                width: 390,
-                margin: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Color(0xff2D3039),
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                ),
-                child: MaterialButton(
-                  onPressed: () {
-                    Timer(Duration(milliseconds: 600), ()
-                    {
-                      if(connected)
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => BodyWidget(Season, ServerResponse)));
-                      else
-                        Fluttertoast.showToast(
-                            msg: "No Internet Connection. Try again",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 2,
-                            fontSize: 13.0
-                        );
-                        print("Not connected to the Internet");
-                    });
-                  },
-                  child: Center (
+                Container(
+                    margin: EdgeInsets.all(24),
+                    padding: EdgeInsets.only(top: 24),
+                    alignment: Alignment.centerLeft,
                     child: Text(
-                      'Continue',
-                      style: TextStyle(
+                      'Season',
+                      style: new TextStyle(
+                          fontSize: 20.0,
                           fontFamily: 'OpenSans',
                           fontWeight: FontWeight.w700,
-                          fontSize: 20,
-                          color: Color(0xFFE6E6E6)),
+                          // style: TextStyle(fontFamily: 'OpenSans'),
+                          color: new Color(0xFFE6E6E6)),
+                    )
+                  // color: Colors.yellow[600],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SeasonButton("Winter"),
+                    SeasonButton("Spring"),
+                    SeasonButton("Summer"),
+                    SeasonButton("Autumn")
+                  ],
+                ),
+                Container(
+                  height: 320,
+                  // color: Colors.blue,
+                ),
+                Container(
+                  height: 70,
+                  width: 390,
+                  margin: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Color(0xff2D3039),
+                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      Timer(Duration(milliseconds: 600), ()
+                      {
+                        if(connected)
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => BodyWidget(Season, ServerResponse)));
+                        else
+                          Fluttertoast.showToast(
+                              msg: "Not connected to the Internet or Did not choose a season",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              fontSize: 13.0
+                          );
+                      });
+                    },
+                    child: Center (
+                      child: Text(
+                        'Continue',
+                        style: TextStyle(
+                            fontFamily: 'OpenSans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                            color: Color(0xFFE6E6E6)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      )
+              ],
+            ),
+          ],
+        )
     );
   }
 }

@@ -19,8 +19,8 @@ class BodyWidgetState extends State<BodyWidget> {
     const url = "https://github.com/Anti-Alpha/Hot-Cold/blob/master/data.csv";
     if(await canLaunch(url)){
       await launch(url,
-        forceWebView: true,
-        forceSafariVC: true
+          forceWebView: true,
+          forceSafariVC: true
       );
     }else{
       throw 'could not launch url';
@@ -104,33 +104,33 @@ class BodyWidgetState extends State<BodyWidget> {
               Align(
                 alignment: Alignment.bottomCenter,
                 // child: Card(
-                  // margin: EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    height: mq.size.height*0.08,
-                    width: mq.size.width*0.9,
-                    margin: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Color(0xff2D3039),
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    ),
-                    child: MaterialButton(
-                      onPressed: () {
-                        _launchUrl();
-                        print("Hello, World!");
-                      },
-                      child: Center (
-                        child: Text(
-                          'Open Strategies',
-                          style: TextStyle(
-                              fontFamily: 'OpenSans',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 17,
-                              color: Color(0xFFE6E6E6)),
-                        ),
+                // margin: EdgeInsets.only(bottom: 10),
+                child: Container(
+                  height: mq.size.height*0.08,
+                  width: mq.size.width*0.9,
+                  margin: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Color(0xff2D3039),
+                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      _launchUrl();
+                      print("Hello, World!");
+                    },
+                    child: Center (
+                      child: Text(
+                        'Open Strategies',
+                        style: TextStyle(
+                            fontFamily: 'OpenSans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                            color: Color(0xFFE6E6E6)),
                       ),
                     ),
                   ),
                 ),
+              ),
               // ),
             ],
           ),
